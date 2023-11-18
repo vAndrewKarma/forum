@@ -1,9 +1,9 @@
 import express, { NextFunction, Response, Request } from 'express'
 import helmet from 'helmet'
 import cors from 'cors'
-import { logRequest } from '../middleware/logRequest'
-import errorHandler from '../middleware/errorHandler'
-import NotFound from '../errors/custom/NotFound'
+import { logRequest } from '../common/middleware/logRequest'
+import errorHandler from '../common/middleware/errorHandler'
+import NotFound from '../common/errors/custom/NotFound'
 import { corsOptions, helmetOptions } from '../config/cors-helmet'
 export default async function ExpressInit() {
   const app = express()
@@ -14,6 +14,7 @@ export default async function ExpressInit() {
   app.use(cors(corsOptions))
   app.use(logRequest)
   //ROUTE FOR STATUS CHECKING
+  // i will try using _variable-name  for unused variables
   app.get('/alive', (_req, res) => res.sendStatus(200)) // a simple status endpoint to check if the server is alive
   app.head('/alive', (_req, res) => res.sendStatus(200)) // same thing but we retrieve only response headers
 

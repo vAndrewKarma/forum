@@ -1,7 +1,7 @@
 import config from './config'
 import process from 'node:process'
 import ExpressInit from './lib/express'
-import { logger } from './config/logger'
+import { logger } from './common/utils/logger'
 ;(async () => {
   const app = await ExpressInit()
   if (require.main === module) {

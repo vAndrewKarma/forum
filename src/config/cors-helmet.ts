@@ -1,5 +1,5 @@
 import { HelmetOptions } from 'helmet'
-import { logger } from './logger'
+import { logger } from '../common/utils/logger'
 import config from '.'
 const clients = [config.client] // i will use a random client, but here you configure the clients which can use your api
 

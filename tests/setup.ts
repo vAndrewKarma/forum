@@ -1,8 +1,8 @@
 import { beforeAll } from '@jest/globals'
 import ExpressInit from '../src/lib/express'
-import { Express } from 'express-serve-static-core'
+import { Application } from 'express'
 
-let app: Express
+let app: Application
 
 beforeAll(async () => {
   process.env.JWT_KEY = 'test_secret'

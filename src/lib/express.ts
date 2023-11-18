@@ -1,9 +1,11 @@
-import express from 'express'
+import express, { NextFunction, Response, Request } from 'express'
 import helmet, { HelmetOptions } from 'helmet'
 import cors from 'cors'
 import { logRequest } from '../middleware/logRequest'
 import config from '../config'
 import { logger } from '../config/logger'
+import errorHandler from '../middleware/errorHandler'
+import NotFound from '../errors/custom/NotFound'
 export default async function ExpressInit() {
   const app = express()
   const clients = [config.client] // i will use a random client, but here you configure the clients which can use your api
@@ -32,6 +34,7 @@ export default async function ExpressInit() {
       }
     },
   }
+  app.enable('trust proxy') // show ip which can be behind a reverse proxy
 
   const helmetOptions: HelmetOptions = {
     dnsPrefetchControl: { allow: true },
@@ -59,15 +62,17 @@ export default async function ExpressInit() {
   app.use(helmet(helmetOptions))
   app.use(cors(corsopt))
   app.use(logRequest)
+  app.use(errorHandler)
   //ROUTE FOR STATUS CHECKING
   app.get('/alive', (req, res) => res.sendStatus(200)) // a simple status endpoint to check if the server is alive
   app.head('/alive', (req, res) => res.sendStatus(200)) // same thing but we retrieve only response headers
-
-  app.enable('trust proxy') // show ip which can be behind a reverse proxy
+  app.all('*', (req: Request, res: Response, next: NextFunction) => {
+    throw new NotFound('Route does not exist')
+  })
 
   app.use(express.json()) //  used for handling encoded json data
 
-  app.use(express.urlencoded({ extended: false })) // used for handling url encoded form data like name=Example+Test&age=20
+  app.use(express.urlencoded({ extended: false, limit: '30mb' })) // used for handling url encoded form data like name=Example+Test&age=20
 
   return app
 }

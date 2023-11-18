@@ -2,6 +2,7 @@ import express, { NextFunction, Response, Request } from 'express'
 import helmet from 'helmet'
 import cors from 'cors'
 import { logRequest } from '../middleware/logRequest'
+import config from '../config'
 import errorHandler from '../middleware/errorHandler'
 import NotFound from '../errors/custom/NotFound'
 import { corsOptions, helmetOptions } from '../config/cors-helmet'
@@ -13,7 +14,6 @@ export default async function ExpressInit() {
   app.use(helmet(helmetOptions))
   app.use(cors(corsOptions))
   app.use(logRequest)
-
   //ROUTE FOR STATUS CHECKING
   app.get('/alive', (req, res) => res.sendStatus(200)) // a simple status endpoint to check if the server is alive
   app.head('/alive', (req, res) => res.sendStatus(200)) // same thing but we retrieve only response headers

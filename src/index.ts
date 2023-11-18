@@ -1,4 +1,5 @@
 import config from './config'
+import process from 'node:process'
 import ExpressInit from './lib/express'
 import { logger } from './config/logger'
 ;(async () => {

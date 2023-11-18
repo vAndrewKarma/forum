@@ -28,6 +28,7 @@ export const helmetOptions: HelmetOptions = {
 
 export const corsOptions = {
   // btw here's a tip, never use cors() cause you basically allow requests for any client, and let's say it is not the best practice if you are building an api
+  exposedHeaders: 'Authorization',
   credentials: true, // when set to true, the request which was made can include credentials, like cookies, http auth
   allowedHeaders: ['Authorization', 'Content-type', 'Content-Lenght', 'Origin'],
   origin: function (
@@ -42,7 +43,12 @@ export const corsOptions = {
       // error logging
       const error = new Error(`${origin} not allowed`)
       logger.error(error)
-      callback(error, false)
+      callback(
+        new Error(
+          `The client ${origin} is not allowed by CORS policy of this site`
+        ),
+        false
+      )
     }
   },
 }

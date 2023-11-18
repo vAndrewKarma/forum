@@ -1,4 +1,7 @@
-node_modules
 package-lock.json
-Dockerfile
+node_modules
 .env
+pnpm-lock.yaml
+logs
+coverage
+dist

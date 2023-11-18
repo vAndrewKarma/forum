@@ -4,9 +4,9 @@ import { ZodError } from 'zod'
 import Template from '../errors/template'
 export default function errorHandler(
   err: Error,
-  req: Request,
+  _req: Request,
   res: Response,
-  next: NextFunction
+  _next: NextFunction
 ) {
   console.log(err)
   if (err instanceof Template) {

@@ -4,7 +4,7 @@ import { app } from '../setup'
 
 describe('Simple status test', () => {
   test('should return value', async () => {
-    const res = await request(app).get('/alive')
+    const res = await request(app).get('/_alivez')
     expect(res.status).toEqual(200)
   }, 5000)
 })

@@ -6,12 +6,15 @@
 export default {
   clearMocks: true,
   collectCoverage: true,
+  setupFilesAfterEnv: ['./tests/setup.ts'],
   coverageDirectory: 'coverage',
   coverageProvider: 'v8',
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   preset: 'ts-jest',
   testEnvironment: 'node',
-
+  testEnvironmentOptions: {
+    NODE_ENV: 'test',
+  },
   coveragePathIgnorePatterns: ['node_modules', 'src/config', 'tests'],
   coverageReporters: ['text', 'lcov', 'clover', 'html'],
 }

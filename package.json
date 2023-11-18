@@ -4,7 +4,8 @@
   "description": "A simple Forum app which can be used as a template.",
   "scripts": {
     "dev": "nodemon -L",
-    "test": "jest --watchAll --no-cache"
+    "test": "jest --watchAll",
+    "test:ci": "jest"
   },
   "keywords": [
     "node",

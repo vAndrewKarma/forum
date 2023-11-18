@@ -31,5 +31,4 @@ export default function errorHandler(
 
   console.log(err)
   return res.status(500).send({ message: `Something unknown just happened.` })
-  next()
 }

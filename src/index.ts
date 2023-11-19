@@ -1,5 +1,6 @@
 import config from './config'
 import process from 'node:process'
+import { mongoose } from './lib/mongo'
 import fs from 'fs'
 import http from 'http'
 import https from 'https'
@@ -10,6 +11,9 @@ import { logger } from './common/utils/logger'
   if (config.NODE_ENV == 'development')
     if (require.main === module) {
       // not started by another entity
+
+      mongoose.model // ignore i've used it just so mongoose connects to the db, like an init function
+
       http
         .createServer(app)
         .listen(config.app.port, function () {

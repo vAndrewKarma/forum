@@ -6,6 +6,6 @@ export default {
     port: process.env.PORT || 4000,
     jwt: process.env.JWT_SECRET || 'test',
   },
-  db: process.env.MONGO_URI || '',
+  db: process.env.MONGO_URI || 'mongodb://localhost:27017/forum',
   client: process.env.client || 'http://localhost:3000',
 }

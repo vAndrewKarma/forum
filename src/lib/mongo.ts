@@ -1,9 +1,9 @@
-// import config from '../config'
+import config from '../config'
 import mongoose from 'mongoose'
 import { connectionOptions } from '../config/mongo'
 import { logger } from '../common/utils/logger'
 
-mongoose.connect('mongodb://127.0.0.1:27017/forum-app', connectionOptions)
+mongoose.connect(config.db, connectionOptions)
 mongoose.connection.on('error', () => {
   logger.info(
     'MongoDB Connection Error. Please make sure that MongoDB is running.'

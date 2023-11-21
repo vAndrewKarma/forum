@@ -1,6 +1,7 @@
 import express, { NextFunction, Response, Request, Application } from 'express'
 import helmet from 'helmet'
 import config from '../config'
+import compression from 'compression'
 import cors from 'cors'
 import { logRequest } from '../common/middleware/logRequest'
 import errorHandler from '../common/middleware/errorHandler'
@@ -14,6 +15,7 @@ export default async function ExpressInit(): Promise<Application> {
   app.use(express.raw({ limit: '30mb' }))
   if (config.NODE_ENV === 'production') app.set('trust proxy', 1)
   app.use(helmet(helmetOptions))
+  app.use(compression) // used to reduce the size of the files
   app.use(cors(corsOptions))
   app.use(logRequest)
   //ROUTE FOR STATUS CHECKING

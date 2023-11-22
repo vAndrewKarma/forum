@@ -13,9 +13,11 @@ export default async function ExpressInit(): Promise<Application> {
   app.use(express.json({ limit: '30mb' })) //  used for handling encoded json data
   app.use(express.urlencoded({ extended: false, limit: '30mb' })) // used for handling url encoded form data like name=Example+Test&age=20
   app.use(express.raw({ limit: '30mb' }))
-  if (config.NODE_ENV === 'production') app.set('trust proxy', 1)
+  if (config.NODE_ENV === 'production')
+    app.set('trust proxy', 1), app.use(compression)
+  // used to reduce the size of the files
+  else app.use(compression({ level: 3 }))
   app.use(helmet(helmetOptions))
-  app.use(compression) // used to reduce the size of the files
   app.use(cors(corsOptions))
   app.use(logRequest)
   //ROUTE FOR STATUS CHECKING

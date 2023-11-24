@@ -10,9 +10,9 @@ import { corsOptions, helmetOptions } from '../config/cors-helmet'
 
 export default async function ExpressInit(): Promise<Application> {
   const app: Application = express()
-  app.use(express.json({ limit: '30mb' })) //  used for handling encoded json data
-  app.use(express.urlencoded({ extended: false, limit: '30mb' })) // used for handling url encoded form data like name=Example+Test&age=20
-  app.use(express.raw({ limit: '30mb' }))
+  app.use(express.json({ limit: '50kb' })) //  used for handling encoded json data
+  app.use(express.urlencoded({ extended: false, limit: '50kb' })) // used for handling url encoded form data like name=Example+Test&age=20
+  app.use(express.raw({ limit: '50kb' }))
   if (config.NODE_ENV === 'production')
     app.set('trust proxy', 1), app.use(compression)
   // used to reduce the size of the files

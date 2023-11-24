@@ -14,6 +14,9 @@
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
     "ready": "npm run format && npm run lint && npm run build"
   },
+  "engines": {
+    "node": ">=18.0"
+  },
   "keywords": [
     "node",
     "node.js",

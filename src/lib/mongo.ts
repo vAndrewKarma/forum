@@ -51,4 +51,4 @@ process.on('uncaughtException', async (error) => {
   process.exit(1)
 })
 
-export { mongoose }
+export { mongoose as init }

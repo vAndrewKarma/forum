@@ -23,7 +23,7 @@ export default async function ExpressInit(): Promise<Application> {
   // eslint-disable-next-line no-constant-condition
   if (config.NODE_ENV !== 'production' || 'development')
     app.use(session(session_config))
-  else app.use(session({ secret: 'f4z4gs$Gcg' }))
+  else app.use(session({ secret: 'f4z4gs$Gcdg' }))
   // used to reduce the size of the files
 
   app.use(helmet(helmetOptions))

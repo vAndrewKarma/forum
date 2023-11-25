@@ -9,6 +9,7 @@
     "module": "CommonJS",
     "pretty": true, // highlight errors
     "sourceMap": true,
+    "skipLibCheck": true,
     "outDir": "./dist",
     "allowJs": true,
     // "noEmit": true,

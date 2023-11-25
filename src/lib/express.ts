@@ -13,14 +13,19 @@ import { UserRoutes } from '../routes/user'
 import { StatusRoute } from '../routes/status'
 export default async function ExpressInit(): Promise<Application> {
   const app: Application = express()
-  app.use(session(session_config))
+
   app.use(express.json({ limit: '50kb' })) //  used for handling encoded json data
   app.use(express.urlencoded({ extended: false, limit: '50kb' })) // used for handling url encoded form data like name=Example+Test&age=20
   app.use(express.raw({ limit: '50kb' }))
   if (config.NODE_ENV === 'production')
     app.set('trust proxy', 1), app.use(compression)
-  // used to reduce the size of the files
   else app.use(compression({ level: 3 }))
+  // eslint-disable-next-line no-constant-condition
+  if (config.NODE_ENV !== 'production' || 'development')
+    app.use(session(session_config))
+  else app.use(session({ secret: 'f4z4gs$Gcg' }))
+  // used to reduce the size of the files
+
   app.use(helmet(helmetOptions))
   app.use(cors(corsOptions))
   app.use(logRequest)

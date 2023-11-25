@@ -7,5 +7,6 @@ export default {
     jwt: process.env.JWT_SECRET || 'test',
   },
   db: process.env.MONGO_URI || 'mongodb://localhost:27017/forum',
-  client: process.env.client || 'http://localhost:3000',
+  client: process.env.CLIENT || 'http://localhost:3000',
+  cache: process.env.REDIS_URL || 'redis://127.0.0.1:6379',
 }

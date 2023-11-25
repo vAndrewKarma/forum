@@ -2,6 +2,8 @@ import express, { NextFunction, Response, Request, Application } from 'express'
 import helmet from 'helmet'
 import config from '../config'
 import compression from 'compression'
+import { session_config } from '../config/session'
+import session from 'express-session'
 import cors from 'cors'
 import { logRequest } from '../common/middleware/logRequest'
 import errorHandler from '../common/middleware/errorHandler'
@@ -11,6 +13,7 @@ import { UserRoutes } from '../routes/user'
 import { StatusRoute } from '../routes/status'
 export default async function ExpressInit(): Promise<Application> {
   const app: Application = express()
+  app.use(session(session_config))
   app.use(express.json({ limit: '50kb' })) //  used for handling encoded json data
   app.use(express.urlencoded({ extended: false, limit: '50kb' })) // used for handling url encoded form data like name=Example+Test&age=20
   app.use(express.raw({ limit: '50kb' }))

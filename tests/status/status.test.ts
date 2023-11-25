@@ -15,3 +15,10 @@ describe('Not found test', () => {
     expect(res.status).toEqual(404)
   })
 })
+
+describe('Metrics test', () => {
+  test('should return value', async () => {
+    const res = await request(app).get('/_metricz')
+    expect(res.status).toEqual(200)
+  })
+})

@@ -1,4 +1,3 @@
-import config from '.'
 import Init_Store from '../lib/redis'
 export default async function Get_Session_Details() {
   const store = await Init_Store()
@@ -6,7 +5,7 @@ export default async function Get_Session_Details() {
     secret: 'f4z4gs$Gcg', // should be stored securely in a .env variable
     cookie: {
       maxAge: 24 * 60 * 60 * 1000, // 1 day
-      secure: config.NODE_ENV === 'production', // serve cookies on http (or in development mode)
+      secure: true, // serve cookies on http (or in development mode)
       httpOnly: true, // clientside javascript(document.cookie) cannot see this cookie
     },
     rolling: true,

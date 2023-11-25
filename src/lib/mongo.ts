@@ -2,7 +2,6 @@ import config from '../config'
 import mongoose from 'mongoose'
 import { connectionOptions } from '../config/mongo'
 import { logger } from '../common/utils/logger'
-import { client } from './redis'
 
 mongoose.connect(config.db, connectionOptions)
 mongoose.connection.on('error', () => {
@@ -17,7 +16,7 @@ mongoose.connection.on('connected', function () {
 // Handling SIGINTsignal
 process.on('SIGINT', async function () {
   await mongoose.connection.close(true)
-  await client.quit()
+
   logger.info(
     'Mongoose default connection disconnected through app termination'
   )
@@ -27,7 +26,7 @@ process.on('SIGINT', async function () {
 // Handling SIGTERM signal
 process.on('SIGTERM', async function () {
   await mongoose.connection.close(true)
-  await client.quit()
+
   logger.info(
     'Mongoose default connection disconnected through app termination'
   )
@@ -38,7 +37,7 @@ process.on('SIGTERM', async function () {
 process.on('unhandledRejection', async (reason, promise) => {
   logger.error(`Unhandled Rejection at: ${promise}, reason: ${reason}`)
   await mongoose.connection.close(true)
-  await client.quit()
+
   logger.info(
     'Mongoose default connection disconnected through app termination'
   )
@@ -49,7 +48,7 @@ process.on('unhandledRejection', async (reason, promise) => {
 process.on('uncaughtException', async (error) => {
   logger.error(`Uncaught Exception: ${error.message}`)
   await mongoose.connection.close(true)
-  await client.quit()
+
   logger.info(
     'Mongoose default connection disconnected through app termination'
   )

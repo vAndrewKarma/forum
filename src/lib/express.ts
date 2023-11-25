@@ -2,12 +2,13 @@ import express, { NextFunction, Response, Request, Application } from 'express'
 import helmet from 'helmet'
 import config from '../config'
 import compression from 'compression'
-import { session_config } from '../config/session'
+import Get_Session_Details from '../config/session'
 import session from 'express-session'
 import cors from 'cors'
 import { logRequest } from '../common/middleware/logRequest'
 import errorHandler from '../common/middleware/errorHandler'
 import NotFound from '../common/errors/custom/NotFound'
+
 import { corsOptions, helmetOptions } from '../config/cors-helmet'
 import { UserRoutes } from '../routes/user'
 import { StatusRoute } from '../routes/status'
@@ -20,10 +21,9 @@ export default async function ExpressInit(): Promise<Application> {
   if (config.NODE_ENV === 'production')
     app.set('trust proxy', 1), app.use(compression)
   else app.use(compression({ level: 3 }))
-  // eslint-disable-next-line no-constant-condition
-  if (config.NODE_ENV !== 'production' || 'development')
-    app.use(session(session_config))
-  else app.use(session({ secret: 'f4z4gs$Gcdg' }))
+
+  app.use(session(await Get_Session_Details()))
+
   // used to reduce the size of the files
 
   app.use(helmet(helmetOptions))

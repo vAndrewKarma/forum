@@ -6,7 +6,6 @@ import http from 'http'
 import https from 'https'
 import ExpressInit from './lib/express'
 import cluster from 'cluster'
-
 import { cpus } from 'os'
 import { logger } from './common/utils/logger'
 import { Cluster_listener } from './lib/cluster'

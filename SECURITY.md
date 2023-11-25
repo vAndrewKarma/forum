@@ -1,12 +1,11 @@
 # Security Policy
-
----
+<br>
 <h5>name: Security vulnerability<br><h5>
 <h5>about: Create a report to help this forum app improve<br><h5>
 <h5>title: ''<br><h5>
 <h5>labels: ''<br><h5>
 <h5>assignees: '' <h5>
----
+
 
 <!--
   when raising an issue please include replies to the following questions,

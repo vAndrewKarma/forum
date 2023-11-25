@@ -1,7 +1,7 @@
 # Security Policy
 
 ---
-name: Security vulnerability
+name: 
 about: Create a report to help this forum app improve
 title: ''
 labels: ''

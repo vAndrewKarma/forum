@@ -5,7 +5,7 @@ name: Security vulnerability<br>
 about: Create a report to help this forum app improve<br>
 title: ''<br>
 labels: ''<br>
-assignees: ''
+assignees: '' 
 ---
 
 <!--

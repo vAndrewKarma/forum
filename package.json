@@ -31,12 +31,16 @@
   "license": "ISC",
   "devDependencies": {
     "@jest/globals": "^29.7.0",
+    "@types/bcrypt": "^5.0.2",
     "@types/compression": "^1.7.5",
     "@types/cors": "^2.8.16",
     "@types/express": "^4.17.19",
     "@types/express-serve-static-core": "^4.17.21",
     "@types/express-session": "1.15.16",
+    "@types/jsonwebtoken": "^9.0.5",
     "@types/node": "^20.10.0",
+    "@types/passport": "^1.0.16",
+    "@types/passport-local": "^1.0.38",
     "@types/supertest": "^2.0.16",
     "@typescript-eslint/eslint-plugin": "^6.11.0",
     "eslint": "^8.54.0",
@@ -48,6 +52,7 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "compression": "^1.7.4",
     "connect-redis": "^7.1.0",
     "cors": "^2.8.5",
@@ -59,6 +64,8 @@
     "https": "^1.0.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.0.1",
+    "passport": "^0.6.0",
+    "passport-local": "^1.0.0",
     "redis": "^4.6.11",
     "ts-jest": "^29.1.1",
     "winston": "^3.11.0",

@@ -5,6 +5,7 @@ import compression from 'compression'
 import Get_Session_Details from '../config/session'
 import session from 'express-session'
 import cors from 'cors'
+import passport from './passport'
 import { logRequest } from '../common/middleware/logRequest'
 import errorHandler from '../common/middleware/errorHandler'
 import NotFound from '../common/errors/custom/NotFound'
@@ -21,11 +22,13 @@ export default async function ExpressInit(): Promise<Application> {
   if (config.NODE_ENV === 'production')
     app.set('trust proxy', 1), app.use(compression)
   else app.use(compression({ level: 3 }))
+  const sessionDetails = await Get_Session_Details()
+  app.use(session(sessionDetails))
 
-  app.use(session(await Get_Session_Details()))
+  app.use(passport.initialize())
+  app.use(passport.session())
 
   // used to reduce the size of the files
-
   app.use(helmet(helmetOptions))
   app.use(cors(corsOptions))
   app.use(logRequest)

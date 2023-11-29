@@ -38,7 +38,7 @@ passport.use(
 passport.serializeUser((user: UserDocument, done) => {
   console.log(`Serialize`)
   //console.log(user)
-  done(null, user._id)
+  done(null, { id: user._id, username: user.username, gender: user.gender })
 })
 
 passport.deserializeUser(async (id, done) => {

@@ -86,7 +86,8 @@ router.get('/logout', (req: Request, res: Response) => {
 
 // Route to check if the user is authorized
 router.get('/check-auth', checkAuth, (req: Request, res: Response) => {
-  res.send('User is authorized')
+  console.log(JSON.stringify(req.user))
+  res.send('authorized')
 })
 
 export { router as UserRoutes }

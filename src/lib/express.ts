@@ -5,7 +5,7 @@ import compression from 'compression'
 import Get_Session_Details from '../config/session'
 import session from 'express-session'
 import cors from 'cors'
-import passport from './passport'
+import passport from '../config/passport'
 import { logRequest } from '../common/middleware/logRequest'
 import errorHandler from '../common/middleware/errorHandler'
 import NotFound from '../common/errors/custom/NotFound'
@@ -36,6 +36,7 @@ export default async function ExpressInit(): Promise<Application> {
   //ROUTES
   app.use(StatusRoute)
   app.use(UserRoutes)
+
   app.all('*', (_req: Request, _res: Response, _next: NextFunction) => {
     throw new NotFound('Route does not exist')
   })

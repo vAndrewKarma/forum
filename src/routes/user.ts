@@ -2,9 +2,10 @@ import express, { Request, Response } from 'express'
 // import { Signup } from '../controller/user'
 import bcrypt from 'bcrypt'
 import { logger } from '../common/utils/logger'
-import passport from '../lib/passport'
+import passport from '../config/passport'
 const router = express.Router()
 import { User } from '../models/user'
+import checkAuth from '../common/utils/check-auth'
 
 // Register route
 router.post('/register', async (req, res, next) => {
@@ -43,78 +44,30 @@ router.post('/register', async (req, res, next) => {
 })
 
 // Login route
-router.post('/login', (req, res, next) => {
-  // Store any necessary information in the session or request body
-  req.session.someData = 'some value'
+router.post('/login', function (req, res, next) {
+  passport.authenticate('local', function (err, user, info) {
+    console.log(info)
+    if (err) {
+      return next(err)
+    }
 
-  // Call passport.authenticate without passReqToCallback
-  passport.authenticate('local', async (err, user, data) => {
-    try {
+    if (!user) {
+      return res.status(401).json({
+        err: info,
+      })
+    }
+
+    req.logIn(user, function (err) {
       if (err) {
-        console.error(err.message)
-        return res.json({ authenticated: false, message: 'Other Server error' })
-      }
-
-      console.log('test')
-
-      if (!user) {
-        return res.json({ authenticated: false, message: data.message })
-      }
-
-      console.log('test')
-
-      // Regenerate session with a new Id
-      console.log(req.session)
-      console.log(req.session.passport)
-
-      if (!req.session.passport || !req.session.passport.user) {
-        // Perform session regeneration logic
-        req.session.regenerate(async (regenErr) => {
-          console.log('test')
-
-          if (regenErr) {
-            console.error(regenErr)
-            return next(regenErr)
-          }
-
-          req.session.type = 'loggedIn'
-          req.session.user = user.username
-          req.session.visits = 1
-
-          // Set the cookie age to a month if 'Remember Me' is set
-          if (req.body.rememberMe) {
-            req.session.rememberMe = true
-            req.session.cookie.maxAge = 30 * 24 * 60 * 60 * 1000 // 1 month
-          }
-
-          console.log('test')
-
-          // Log the user in to the passport session
-          req.login(user, async (loginErr) => {
-            try {
-              if (loginErr) {
-                console.error(loginErr.message)
-                return next(loginErr)
-              }
-
-              const nonSensitiveUser = {
-                username: user.username,
-                email: user.email,
-                token: user.token,
-              }
-
-              return res.json({ authenticated: true, user: nonSensitiveUser })
-            } catch (jsonErr) {
-              console.error(jsonErr.message)
-              return next(jsonErr)
-            }
-          })
+        return res.status(500).json({
+          err: 'Could not log in user',
         })
       }
-    } catch (catchErr) {
-      console.error(catchErr.message)
-      return next(catchErr)
-    }
+
+      res.status(200).json({
+        status: 'Login successful!',
+      })
+    })
   })(req, res, next)
 })
 
@@ -132,12 +85,8 @@ router.get('/logout', (req: Request, res: Response) => {
 })
 
 // Route to check if the user is authorized
-router.get('/check-auth', (req: Request, res: Response) => {
-  if (req.isAuthenticated()) {
-    res.json({ message: 'User is authorized', user: req.user })
-  } else {
-    res.json({ message: 'User is not authorized' })
-  }
+router.get('/check-auth', checkAuth, (req: Request, res: Response) => {
+  res.send('User is authorized')
 })
 
 export { router as UserRoutes }

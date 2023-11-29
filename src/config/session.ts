@@ -5,10 +5,12 @@ export default async function Get_Session_Details() {
   const session_config = {
     secret: 'f4z4gs$Gcg', // should be stored securely in a .env variable
     cookie: {
+      sameSite: true,
       maxAge: 24 * 60 * 60 * 1000, // 1 day
       secure: config.NODE_ENV === 'production', // serve cookies on http (or in development mode)
       httpOnly: true, // clientside javascript(document.cookie) cannot see this cookie
     },
+    proxy: config.NODE_ENV === 'production',
     rolling: true,
     saveUninitialized: true,
     resave: false,

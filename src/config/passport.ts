@@ -1,6 +1,7 @@
 import passport from 'passport'
 import { Strategy as LocalStrategy } from 'passport-local'
 import { User, UserDocument } from '../models/user'
+import { findUserBy } from '../services/user.service'
 
 interface Isession {
   id: string
@@ -18,7 +19,7 @@ passport.use(
     let user: UserDocument
     // 1. Check if the user is found
     try {
-      user = await User.findByUsername(username)
+      user = await findUserBy('username', username)
       if (!user) {
         return done(null, false, { message: 'Invalid email or password' })
       }

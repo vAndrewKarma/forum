@@ -14,7 +14,6 @@ export interface UserDocument extends UserAttributes, Document {}
 
 interface UserModel extends Model<UserDocument> {
   comparePassword(password: string, passwordHash: string): boolean
-  findByUsername(username: string): Promise<UserDocument | null>
 }
 
 const UserSchema = new mongoose.Schema<UserDocument>(
@@ -44,9 +43,21 @@ const UserSchema = new mongoose.Schema<UserDocument>(
   },
   { timestamps: true }
 )
+UserSchema.pre('save', async function (next) {
+  const user = this as UserDocument
 
-UserSchema.pre('save', function (next) {
-  next()
+  if (!user.isModified('password')) {
+    return next()
+  }
+
+  try {
+    const saltRounds = 10
+    const hashedPassword = await bcrypt.hash(user.password, saltRounds)
+    user.password = hashedPassword
+    next()
+  } catch (error) {
+    return next(error)
+  }
 })
 
 UserSchema.statics.comparePassword = async (
@@ -54,13 +65,6 @@ UserSchema.statics.comparePassword = async (
   passwordHash: string
 ) => {
   return await bcrypt.compare(password, passwordHash)
-}
-UserSchema.statics.findById = (id) => {
-  return User.findOne({ _id: id }, { __v: 0 }).lean().exec()
-}
-
-UserSchema.statics.findByUsername = (username) => {
-  return User.findOne({ username }, { __v: 0 }).lean().exec()
 }
 
 const User = mongoose.model<UserDocument, UserModel>('User', UserSchema)

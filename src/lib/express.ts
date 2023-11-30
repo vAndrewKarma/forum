@@ -12,6 +12,7 @@ import NotFound from '../common/errors/custom/NotFound'
 import { corsOptions, helmetOptions } from '../config/cors-helmet'
 import { UserRoutes } from '../routes/user'
 import { StatusRoute } from '../routes/status'
+import { AuthRoutes } from '../routes/auth'
 export default async function ExpressInit(): Promise<Application> {
   const app: Application = express()
   app.set('port', config.app.port)
@@ -23,6 +24,8 @@ export default async function ExpressInit(): Promise<Application> {
   else app.use(compression({ level: 3 }))
   const sessionDetails = await Get_Session_Details()
   app.use(session(sessionDetails))
+  app.set('view engine', 'ejs')
+  app.set('views', __dirname + '/../views') // Specify the directory where your views are stored
 
   app.use(passport.initialize())
   app.use(passport.session())
@@ -32,10 +35,11 @@ export default async function ExpressInit(): Promise<Application> {
   app.use(cors(corsOptions))
   app.use(logRequest)
   // i will try using _variable-name  for unused variables
+
   //ROUTES
   app.use(StatusRoute)
   app.use(UserRoutes)
-
+  app.use(AuthRoutes)
   app.all('*', (_req: Request, _res: Response, _next: NextFunction) => {
     throw new NotFound('Route does not exist')
   })

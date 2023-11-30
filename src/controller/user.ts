@@ -24,7 +24,7 @@ export const Signup = async (
       sanitized.email.toLowerCase()
     )
     if (email_exists) throw new BadRequest('Email already used', 'email')
-    console.log(sanitized)
+
     const user = createUser(sanitized)
     await user.save()
     if (user._id) {

@@ -9,13 +9,12 @@ import passport from '../config/passport'
 import { logRequest } from '../common/middleware/logRequest'
 import errorHandler from '../common/middleware/errorHandler'
 import NotFound from '../common/errors/custom/NotFound'
-
 import { corsOptions, helmetOptions } from '../config/cors-helmet'
 import { UserRoutes } from '../routes/user'
 import { StatusRoute } from '../routes/status'
 export default async function ExpressInit(): Promise<Application> {
   const app: Application = express()
-
+  app.set('port', config.app.port)
   app.use(express.json({ limit: '50kb' })) //  used for handling encoded json data
   app.use(express.urlencoded({ extended: false, limit: '50kb' })) // used for handling url encoded form data like name=Example+Test&age=20
   app.use(express.raw({ limit: '50kb' }))

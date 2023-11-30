@@ -5,6 +5,7 @@ export default {
   app: {
     port: process.env.PORT || 4000,
     jwt: process.env.JWT_SECRET || 'test',
+    session: process.env.SESSION_SECRET || 'tests',
   },
   db: process.env.MONGO_URI || 'mongodb://localhost:27017/forum',
   client: process.env.CLIENT || 'http://localhost:3000',

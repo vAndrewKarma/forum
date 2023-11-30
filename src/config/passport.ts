@@ -1,16 +1,26 @@
 import passport from 'passport'
 import { Strategy as LocalStrategy } from 'passport-local'
 import { User, UserDocument } from '../models/user'
-import jwt from 'jsonwebtoken'
+
+interface Isession {
+  id: string
+  username: string
+  gender: string
+}
+
 passport.use(
   'local',
-  new LocalStrategy(async function (email, password, done) {
-    let user
+  new LocalStrategy({ usernameField: 'username' }, async function (
+    username,
+    password,
+    done
+  ) {
+    let user: UserDocument
     // 1. Check if the user is found
     try {
-      user = await User.findByUsername(email)
+      user = await User.findByUsername(username)
       if (!user) {
-        return done(null, false, { message: 'No user found by that email' })
+        return done(null, false, { message: 'Invalid email or password' })
       }
     } catch (e) {
       return done(e)
@@ -20,36 +30,33 @@ passport.use(
     try {
       const match = await User.comparePassword(password, user.password)
       if (!match) {
-        return done(null, false, { message: 'Password is incorrect' })
+        return done(null, false, { message: 'Invalid email or password' })
       }
     } catch (e) {
       return done(e)
     }
 
-    // 3. User successfully found/authenticated
-    const token = `JWT ${jwt.sign({ id: user._id }, 'dsadsadsa')}`
-    user.token = token
-    delete user.password
-    console.log('workks')
-    return done(null, user)
+    return done(undefined, user)
   })
 )
 
 passport.serializeUser((user: UserDocument, done) => {
-  console.log(`Serialize`)
-  //console.log(user)
-  done(null, { id: user._id, username: user.username, gender: user.gender })
+  console.log('serialize')
+  done(undefined, {
+    id: user._id,
+    username: user.username,
+    gender: user.gender,
+    email: user.email,
+  })
 })
 
-passport.deserializeUser(async (id, done) => {
-  console.log(`Deserialize`)
-  //console.log(id)
+passport.deserializeUser(async (session: Isession, done) => {
   try {
-    const user = await User.findById(id)
+    const user = await User.findById(session.id)
     if (!user) {
-      return done(new Error('user not found'))
+      return done(new Error('Invalid credentials'))
     }
-    done(null, user)
+    done(undefined, user)
   } catch (e) {
     done(e)
   }

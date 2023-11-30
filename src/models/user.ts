@@ -2,7 +2,6 @@ import mongoose, { Document, Model } from 'mongoose'
 import bcrypt from 'bcrypt'
 
 interface UserAttributes {
-  token: string
   username: string
   password: string
   email: string
@@ -49,11 +48,12 @@ const UserSchema = new mongoose.Schema<UserDocument>(
 UserSchema.pre('save', function (next) {
   next()
 })
-UserSchema.statics.findAll = () => {
-  return User.find({}, { __v: 0 }).lean().exec()
-}
-UserSchema.statics.comparePassword = (password, passwordHash) => {
-  return bcrypt.compareSync(password, passwordHash)
+
+UserSchema.statics.comparePassword = async (
+  password: string,
+  passwordHash: string
+) => {
+  return await bcrypt.compare(password, passwordHash)
 }
 UserSchema.statics.findById = (id) => {
   return User.findOne({ _id: id }, { __v: 0 }).lean().exec()
@@ -62,16 +62,7 @@ UserSchema.statics.findById = (id) => {
 UserSchema.statics.findByUsername = (username) => {
   return User.findOne({ username }, { __v: 0 }).lean().exec()
 }
-UserSchema.statics.findByEmail = (email) => {
-  return User.findOne({ email }, { __v: 0 }).lean().exec()
-}
-UserSchema.statics.removeUser = (id) => {
-  return User.deleteOne({ _id: id }).exec()
-}
 
-UserSchema.statics.updateUser = (user) => {
-  return User.updateOne({ _id: user._id }, { $set: user }).exec()
-}
 const User = mongoose.model<UserDocument, UserModel>('User', UserSchema)
 
 export { User }

@@ -22,9 +22,11 @@ import { Cluster_listener } from './lib/cluster'
         // not started by another entity
         http
           .createServer(app)
-          .listen(config.app.port, function () {
+          .listen(app.get('port'), function () {
             logger.info(
-              `Listening to ${config.app.port} - ENV: ${config.NODE_ENV} on ${process.pid}`
+              `Listening to ${app.get('port')} - ENV: ${config.NODE_ENV} on ${
+                process.pid
+              }`
             )
           })
           .on('error', (err: Error) => {
@@ -39,9 +41,11 @@ import { Cluster_listener } from './lib/cluster'
       }
       https
         .createServer(credentials, app)
-        .listen(config.app.port, function () {
+        .listen(app.get('port'), function () {
           logger.info(
-            `Listening to ${config.app.port} - ENV: ${config.NODE_ENV} on ${process.pid}`
+            `Listening to ${app.get('port')} - ENV: ${config.NODE_ENV} on ${
+              process.pid
+            }`
           )
         })
         .on('error', (err: Error) => {

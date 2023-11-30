@@ -9,11 +9,11 @@ router.post('/login', Login)
 // Logout route
 router.get('/logout', Logout)
 
-router.get('/login', (req, res) => {
+router.get('/login', (_req, res) => {
   res.render('login')
 })
 
-router.get('/checkauth', checkAuth, (req, res) => {
+router.get('/checkauth', checkAuth, (_req, res) => {
   res.render('checkauth')
 })
 export { router as AuthRoutes }

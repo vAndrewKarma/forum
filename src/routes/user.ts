@@ -5,7 +5,7 @@ const router = express.Router()
 // Register route
 router.post('/register', Signup)
 
-router.get('/register', (req, res) => {
+router.get('/register', (_req, res) => {
   res.render('register')
 })
 

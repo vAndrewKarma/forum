@@ -1,19 +1,17 @@
 import express from 'express'
 import { Login, Logout } from '../controller/auth'
-import checkAuth from '../common/utils/check-auth'
+import protected_route from '../common/utils/protected_route'
+import page from '../config/pages-ejs'
 const router = express.Router()
 
 // Login route
-router.post('/login', Login)
+router.post(
+  '/login',
+  protected_route(page.profile.route, { authenthication_route: true }),
+  Login
+)
 
 // Logout route
 router.get('/logout', Logout)
 
-router.get('/login', (_req, res) => {
-  res.render('login')
-})
-
-router.get('/checkauth', checkAuth, (_req, res) => {
-  res.render('checkauth')
-})
 export { router as AuthRoutes }

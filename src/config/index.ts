@@ -4,7 +4,6 @@ export default {
   NODE_ENV: process.env.NODE_ENV || 'development',
   app: {
     port: process.env.PORT || 4000,
-    jwt: process.env.JWT_SECRET || 'test',
     session: process.env.SESSION_SECRET || 'tests',
   },
   db: process.env.MONGO_URI || 'mongodb://localhost:27017/forum',

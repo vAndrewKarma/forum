@@ -2,8 +2,10 @@ import { NextFunction, Request, Response } from 'express'
 import BadRequest from '../common/errors/custom/BadRequest'
 import sanitize from '../common/utils/mongo-sanitize'
 import { validateRegister } from '../common/utils/validation'
+import page from '../config/pages-ejs'
 import { UserDocument } from '../models/user'
 import { createUser, findUserBy } from '../services/user.service'
+import { logger } from '../config/logger'
 export const Signup = async (
   req: Request,
   res: Response,
@@ -35,7 +37,8 @@ export const Signup = async (
         })
       })
     }
-    res.send(user)
+    logger.debug(user)
+    res.redirect(page.profile.route)
   } catch (err) {
     return next(err)
   }

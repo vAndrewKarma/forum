@@ -1,6 +1,6 @@
 import RedisStore from 'connect-redis'
 import { createClient } from 'redis'
-import { logger } from '../common/utils/logger'
+import { logger } from '../config/logger'
 import config from '../config'
 
 export default async function Init_Store() {

@@ -42,12 +42,13 @@ passport.use(
 )
 
 passport.serializeUser((user: UserDocument, done) => {
-  console.log('serialize')
   done(undefined, {
     id: user._id,
     username: user.username,
     gender: user.gender,
     email: user.email,
+    lastName: user.lastName,
+    firstName: user.firstName,
   })
 })
 

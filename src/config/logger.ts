@@ -1,5 +1,5 @@
 import winston from 'winston'
-import config from '../../config/index'
+import config from './index'
 import path from 'path'
 
 // configure format

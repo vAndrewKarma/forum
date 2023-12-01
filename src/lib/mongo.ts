@@ -1,11 +1,11 @@
 import config from '../config'
 import mongoose from 'mongoose'
 import { connectionOptions } from '../config/mongo'
-import { logger } from '../common/utils/logger'
+import { logger } from '../config/logger'
 mongoose.Promise = global.Promise
 mongoose.connect(config.db, connectionOptions)
 mongoose.connection.on('error', () => {
-  logger.info(
+  logger.debug(
     'MongoDB Connection Error. Please make sure that MongoDB is running.'
   )
   process.exit(1)
@@ -17,7 +17,7 @@ mongoose.connection.on('connected', function () {
 process.on('SIGINT', async function () {
   await mongoose.connection.close(true)
 
-  logger.info(
+  logger.debug(
     'Mongoose default connection disconnected through app termination'
   )
   process.exit(0)
@@ -27,7 +27,7 @@ process.on('SIGINT', async function () {
 process.on('SIGTERM', async function () {
   await mongoose.connection.close(true)
 
-  logger.info(
+  logger.debug(
     'Mongoose default connection disconnected through app termination'
   )
   process.exit(0)
@@ -38,7 +38,7 @@ process.on('unhandledRejection', async (reason, promise) => {
   logger.error(`Unhandled Rejection at: ${promise}, reason: ${reason}`)
   await mongoose.connection.close(true)
 
-  logger.info(
+  logger.debug(
     'Mongoose default connection disconnected through app termination'
   )
   process.exit(1)
@@ -49,7 +49,7 @@ process.on('uncaughtException', async (error) => {
   logger.error(`Uncaught Exception: ${error.message}`)
   await mongoose.connection.close(true)
 
-  logger.info(
+  logger.debug(
     'Mongoose default connection disconnected through app termination'
   )
   process.exit(1)

@@ -7,13 +7,12 @@ import https from 'https'
 import ExpressInit from './lib/express'
 import cluster from 'cluster'
 import { cpus } from 'os'
-import { logger } from './common/utils/logger'
+import { logger } from './config/logger'
 import { Cluster_listener } from './lib/cluster'
 ;(async () => {
   const app = await ExpressInit()
   init.mongo // ignore i've used it just so mongoose connects to the db, like an init function
   Cluster_listener // same thing as above.
-
   if (cluster.isPrimary === true) cpus().forEach(() => cluster.fork())
   // that if condition checks that the code is only executed once and not by each worker... so every worker does not try to create more workers
   else {

@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express'
 import BadRequest from '../common/errors/custom/BadRequest'
 import sanitize from '../common/utils/mongo-sanitize'
 import { validateRegister } from '../common/utils/validation'
-import page from '../config/pages-ejs'
+
 import { UserDocument } from '../models/user'
 import { createUser, findUserBy } from '../services/user.service'
 import { logger } from '../config/logger'
@@ -38,7 +38,12 @@ export const Signup = async (
       })
     }
     logger.debug(user)
-    res.redirect(page.profile.route)
+    return res.json({
+      data: {
+        loggedIn: true,
+        message: 'User created',
+      },
+    })
   } catch (err) {
     return next(err)
   }

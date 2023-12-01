@@ -2,7 +2,7 @@ import passport from 'passport'
 import { Strategy as LocalStrategy } from 'passport-local'
 import { User, UserDocument } from '../models/user'
 import { findUserBy } from '../services/user.service'
-
+import CredentialsError from '../common/errors/custom/CredentialsError'
 interface Isession {
   id: string
   username: string
@@ -21,7 +21,7 @@ passport.use(
     try {
       user = await findUserBy('username', username)
       if (!user) {
-        return done(null, false, { message: 'Invalid email or password' })
+        return done(new CredentialsError('Invalid credentials'), false)
       }
     } catch (e) {
       return done(e)
@@ -31,7 +31,7 @@ passport.use(
     try {
       const match = await User.comparePassword(password, user.password)
       if (!match) {
-        return done(null, false, { message: 'Invalid email or password' })
+        return done(new CredentialsError('Invalid credentials'), false)
       }
     } catch (e) {
       return done(e)
@@ -56,7 +56,7 @@ passport.deserializeUser(async (session: Isession, done) => {
   try {
     const user = await User.findById(session.id)
     if (!user) {
-      return done(new Error('Invalid credentials'))
+      return done(new CredentialsError('Invalid credentials'), false)
     }
     done(undefined, user)
   } catch (e) {

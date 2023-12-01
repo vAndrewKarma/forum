@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction } from 'express'
 import { UserDocument } from '../models/user'
-import { logger } from '../config/logger'
 import passport from '../config/passport'
 import CredentialsError from '../common/errors/custom/CredentialsError'
 import { validateLogin } from '../common/utils/validation'
-import page from '../config/pages-ejs'
+
+import { logger } from '../config/logger'
 export const Login = async (
   req: Request,
   res: Response,
@@ -31,7 +31,12 @@ export const Login = async (
             resolve()
           })
         })
-        res.redirect(page.profile.route)
+        res.status(200).json({
+          data: {
+            loggedIn: true,
+            messsage: 'User logged in',
+          },
+        })
       }
     )(req, res, next)
   } catch (err) {
@@ -42,17 +47,24 @@ export const Login = async (
 export const Logout = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  _next: NextFunction
 ) => {
-  res.clearCookie('user_sid')
-  req.logout(undefined)
-  req.sessionID = ''
-  req.logout(function (err) {
-    if (err) return next(err)
-    req.session.destroy(function (err) {
-      // destroys the session
-      logger.error(err)
-      res.send('Logged out')
-    })
+  req.logout(() => {
+    logger.debug('Logged out')
   })
+  // clear the session cookie on the server and the client
+  if (req.session.user) {
+    res.clearCookie('user_sid')
+    req.session.destroy(function (err) {
+      if (err) console.log(err)
+    })
+  }
+
+  console.log('User Logged out, session destroyed')
+
+  return res
+    .status(200)
+    .json({
+      data: { loggedOut: true, message: 'User Successfully Logged Out' },
+    })
 }

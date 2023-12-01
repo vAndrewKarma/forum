@@ -12,9 +12,8 @@ import { corsOptions, helmetOptions } from '../config/cors-helmet'
 import { UserRoutes } from '../routes/user'
 import { StatusRoute } from '../routes/status'
 import { AuthRoutes } from '../routes/auth'
-import path from 'path'
-import { viewRoutes } from '../routes/views'
-import page from '../config/pages-ejs'
+import Notfound from '../common/errors/custom/notfound'
+
 export default async function ExpressInit(): Promise<Application> {
   const app: Application = express()
   app.set('port', config.app.port)
@@ -26,8 +25,6 @@ export default async function ExpressInit(): Promise<Application> {
   else app.use(compression({ level: 3 }))
   const sessionDetails = await Get_Session_Details()
   app.use(session(sessionDetails))
-  app.set('view engine', 'ejs')
-  app.set('views', path.join(__dirname, '..', 'views'))
 
   app.use(passport.initialize())
   app.use(passport.session())
@@ -40,12 +37,11 @@ export default async function ExpressInit(): Promise<Application> {
 
   //ROUTES
 
-  app.use(viewRoutes)
   app.use(StatusRoute)
   app.use(UserRoutes)
   app.use(AuthRoutes)
-  app.all('*', (_req: Request, res: Response, _next: NextFunction) => {
-    return res.render(page.notfound.file_name)
+  app.all('*', (_req: Request, _res: Response, _next: NextFunction) => {
+    throw new Notfound(`Route couldn't be found`)
   })
   app.use(errorHandler)
   return app

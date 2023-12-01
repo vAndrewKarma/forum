@@ -25,7 +25,11 @@ export const RegisterUser = z
   })
 
 export const LoginUser = z.object({
-  email: z.string().email('Invalid credentials'),
+  username: z
+    .string()
+    .min(3, 'Invalid credentials')
+    .max(20, 'Invalid credentials')
+    .regex(/^[a-zA-Z0-9]+$/, 'Invalid credentials'),
   password: z
     .string()
     .min(8, 'Invalid credentials')

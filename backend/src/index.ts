@@ -6,14 +6,15 @@ import http from 'http'
 import https from 'https'
 import ExpressInit from './lib/express'
 import cluster from 'cluster'
-import { cpus } from 'os'
+import { availableParallelism } from 'os'
 import { logger } from './config/logger'
 import { Cluster_listener } from './lib/cluster'
 ;(async () => {
   const app = await ExpressInit()
   init.mongo // ignore i've used it just so mongoose connects to the db, like an init function
   Cluster_listener // same thing as above.
-  if (cluster.isPrimary === true) cpus().forEach(() => cluster.fork())
+  if (cluster.isPrimary === true)   for (let i = 0; i < availableParallelism(); i++)  cluster.fork();
+
   // that if condition checks that the code is only executed once and not by each worker... so every worker does not try to create more workers
   else {
     if (config.NODE_ENV == 'development')
@@ -23,7 +24,7 @@ import { Cluster_listener } from './lib/cluster'
           .createServer(app)
           .listen(app.get('port'), function () {
             logger.info(
-              `Listening to ${app.get('port')} - ENV: ${config.NODE_ENV} on ${
+              `Listening to ${app.get('port')} - ENV: ${config.NODE_ENV} - Worker ${
                 process.pid
               }`
             )
@@ -42,7 +43,7 @@ import { Cluster_listener } from './lib/cluster'
         .createServer(credentials, app)
         .listen(app.get('port'), function () {
           logger.info(
-            `Listening to ${app.get('port')} - ENV: ${config.NODE_ENV} on ${
+            `Listening to ${app.get('port')} - ENV: ${config.NODE_ENV} - Worker ${
               process.pid
             }`
           )

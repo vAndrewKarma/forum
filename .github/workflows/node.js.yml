@@ -12,21 +12,24 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    
     strategy:
       matrix:
         node-version: [18.x, 19.x, 20.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-      - run: ls
-      - run: cd backend 
       - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
+        
         uses: actions/setup-node@v3
         with:
           cache: npm
           node-version: ${{ matrix.node-version }}
-      - run: cd backend && npm i
-      - run: cd backend &&  npm run ready --if-present
-      - run: cd backend &&  npm run test:ci
+          
+      - run: npm i
+        working-directory: ./backend
+      - run: npm run ready --if-present
+        working-directory: ./backend
+      - run: npm run test:ci
+        working-directory: ./backend

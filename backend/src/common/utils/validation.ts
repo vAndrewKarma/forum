@@ -6,6 +6,7 @@ export const RegisterUser = z
       .string()
       .min(3, 'Username should be at least 3 characters')
       .max(20, 'Username can be maximum 20 characters')
+      .toLowerCase()
       .regex(/^[a-zA-Z0-9]+$/, 'Username should not contain symbols'),
     password: z
       .string()
@@ -29,6 +30,7 @@ export const LoginUser = z.object({
     .string()
     .min(3, 'Invalid credentials')
     .max(20, 'Invalid credentials')
+    .toLowerCase()
     .regex(/^[a-zA-Z0-9]+$/, 'Invalid credentials'),
   password: z
     .string()

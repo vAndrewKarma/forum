@@ -13,6 +13,7 @@ import { UserRoutes } from '../routes/user'
 import { StatusRoute } from '../routes/status'
 import { AuthRoutes } from '../routes/auth'
 import Notfound from '../common/errors/custom/notfound'
+import limiter from '../common/utils/rate-limitter'
 
 export default async function ExpressInit(): Promise<Application> {
   const app: Application = express()
@@ -28,7 +29,7 @@ export default async function ExpressInit(): Promise<Application> {
 
   app.use(passport.initialize())
   app.use(passport.session())
-
+  app.use(limiter) // remove in production and use reverse proxy instead like HAproxy. also app limiters inside business logic do not work well in clusters
   // used to reduce the size of the files
   app.use(helmet(helmetOptions))
   app.use(cors(corsOptions))

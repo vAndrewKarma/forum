@@ -27,7 +27,7 @@ export const Signup = async (
     )
     if (email_exists) throw new BadRequest('Email already used', 'email')
 
-    const user = createUser(sanitized)
+    const user = createUser({...sanitized,ip:req.socket.remoteAddress})
     await user.save()
     if (user._id) {
       await new Promise<void>((resolve, reject) => {

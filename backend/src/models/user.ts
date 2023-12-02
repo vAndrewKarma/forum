@@ -7,6 +7,7 @@ interface UserAttributes {
   email: string
   gender: 'Not Specified' | 'Male' | 'Female'
   firstName?: string
+  ip: string
   lastName?: string
 }
 
@@ -32,6 +33,10 @@ const UserSchema = new mongoose.Schema<UserDocument>(
       trim: true,
       unique: true,
       index: true,
+    },
+    ip: {
+      type: String,
+      required: true,
     },
     firstName: { type: String, trim: true },
     lastName: { type: String, trim: true },

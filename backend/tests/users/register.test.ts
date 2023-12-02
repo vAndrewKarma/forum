@@ -21,7 +21,7 @@ describe('Simple register test', () => {
 describe('Simple session test on register ', () => {
   test('should return 200', async () => {
     const res = await request(app).get('/check-auth')
-    expect(res.status).toEqual(401)
+    expect(res.status).toEqual(200)
   })
 })
 

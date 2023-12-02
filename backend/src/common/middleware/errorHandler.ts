@@ -1,13 +1,18 @@
 import { NextFunction, Request, Response } from 'express'
 import { ZodError } from 'zod'
 import Template from '../errors/template'
+import UserNotExists from '../errors/custom/UserNotExists'
+import endpoint from '../../config/api-endpoints'
+import BadCookie from '../errors/custom/BadCookie'
 export default function errorHandler(
   err: Error,
-  _req: Request,
+  req: Request,
   res: Response,
-  _next: NextFunction
+  next: NextFunction
 ) {
   console.error(err)
+  if(err instanceof UserNotExists || err instanceof BadCookie) return endpoint.auth.logout.controller(req,res,next)
+
   if (err instanceof Template) {
     return res
       .status(err.statusCode)

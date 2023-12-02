@@ -63,6 +63,6 @@ export const Logout = async (
   logger.debug('User Logged out, session destroyed')
 
   return res.status(200).json({
-    data: { loggedOut: true, message: 'User Successfully Logged Out' },
+    data: { loggedIn: false, message: 'User Successfully Logged Out' },
   })
 }

@@ -3,10 +3,12 @@ import { Strategy as LocalStrategy } from 'passport-local'
 import { User, UserDocument } from '../models/user'
 import { findUserBy } from '../services/user.service'
 import CredentialsError from '../common/errors/custom/CredentialsError'
+import UserNotExists from '../common/errors/custom/UserNotExists'
 interface Isession {
   id: string
   username: string
   gender: string
+  ip:string
 }
 
 passport.use(
@@ -46,6 +48,7 @@ passport.serializeUser((user: UserDocument, done) => {
     id: user._id,
     username: user.username,
     gender: user.gender,
+    ip:user.ip,
     email: user.email,
     lastName: user.lastName,
     firstName: user.firstName,
@@ -56,7 +59,7 @@ passport.deserializeUser(async (session: Isession, done) => {
   try {
     const user = await User.findById(session.id)
     if (!user) {
-      return done(new CredentialsError('Invalid credentials'), false)
+      return done(new UserNotExists('User not exists'), false) // if user does not exist but session still exists delete session
     }
     done(undefined, user)
   } catch (e) {

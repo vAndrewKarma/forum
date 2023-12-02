@@ -9,7 +9,7 @@ export function logRequest(req: Request, res: Response, next: NextFunction) {
       // make sure it is not undefined and the path actually exists
 
       const duration = Date.now() - start
-      logger.debug(`${req.method}${req.route.path} - ${duration}ms`)
+      logger.debug(`${req.socket.remoteAddress} --> ${req.method}${req.route.path} - ${duration}ms`)
     }
   })
   next()

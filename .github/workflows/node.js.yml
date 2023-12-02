@@ -12,7 +12,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+    defaults:
+      run:
+        working-directory: ./backend/
     strategy:
       matrix:
         node-version: [18.x, 19.x, 20.x]
@@ -26,10 +28,10 @@ jobs:
         with:
           cache: npm
           node-version: ${{ matrix.node-version }}
+          cache-dependency-path: ./backend/package-lock.json
           
       - run: npm i
-        working-directory: ./backend
+ 
       - run: npm run ready --if-present
-        working-directory: ./backend
+    
       - run: npm run test:ci
-        working-directory: ./backend

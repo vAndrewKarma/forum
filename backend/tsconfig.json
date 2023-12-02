@@ -6,7 +6,8 @@
     "forceConsistentCasingInFileNames": true,
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
-    "module": "CommonJS",
+    "module": "es6",
+   
     "pretty": true, // highlight errors
     "sourceMap": true,
     "skipLibCheck": true,

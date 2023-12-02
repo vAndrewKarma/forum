@@ -4,6 +4,7 @@ import passport from '../config/passport'
 import CredentialsError from '../common/errors/custom/CredentialsError'
 import { validateLogin } from '../common/utils/validation'
 import { logger } from '../config/logger'
+import { NewLocation } from '../services/mail.service'
 
 export const Login = async (
   req: Request,
@@ -24,8 +25,16 @@ export const Login = async (
         }
 
         if (!user) throw new CredentialsError(info.message)
-
-        await new Promise<void>((resolve, reject) => {
+        
+        if(user.ip!==req.socket.remoteAddress){
+   try{
+ await NewLocation(user.email,user._id)
+ return res.json({message:'Verify your email'})
+    }catch(err){
+    return next(err)
+  }
+}
+    await new Promise<void>((resolve, reject) => {
           req.logIn(user, (err) => {
             if (err) reject(err)
             resolve()

@@ -17,5 +17,6 @@ module.exports = {
       'error',
       { argsIgnorePattern: '^_[rR]eq$|^_[rR]es$|^_[nN]ext$' },
     ],
+    '@typescript-eslint/no-var-requires': 0
   },
 }

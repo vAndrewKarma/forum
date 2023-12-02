@@ -17,6 +17,7 @@
   "engines": {
     "node": ">=18.0"
   },
+  "type": "module",
   "keywords": [
     "node",
     "node.js",
@@ -64,6 +65,7 @@
     "https": "^1.0.0",
     "mongodb-memory-server": "^9.1.1",
     "mongoose": "^8.0.1",
+    "nodemailer": "^6.9.7",
     "passport": "^0.6.0",
     "passport-local": "^1.0.0",
     "redis": "^4.6.11",

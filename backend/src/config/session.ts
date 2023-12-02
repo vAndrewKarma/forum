@@ -1,6 +1,6 @@
 import { MemoryStore } from 'express-session'
 import config from '.'
-import Init_Store from '../lib/redis'
+import Init_Store from '../lib/store'
 export default async function Get_Session_Details() {
   const store = await Init_Store()
   const session_config = {
@@ -23,5 +23,5 @@ export default async function Get_Session_Details() {
   } else {
     session_config['store'] = new MemoryStore()
   }
-  return session_config
+  return {sconfig:session_config,client:store.data.client || null}
 }

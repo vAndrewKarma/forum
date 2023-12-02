@@ -1,4 +1,4 @@
-import config from './config'
+const config = require('./config/index')
 import process from 'node:process'
 import { init } from './lib/mongo'
 import fs from 'fs'

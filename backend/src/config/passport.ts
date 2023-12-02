@@ -3,7 +3,7 @@ import { Strategy as LocalStrategy } from 'passport-local'
 import { User, UserDocument } from '../models/user'
 import { findUserBy } from '../services/user.service'
 import CredentialsError from '../common/errors/custom/CredentialsError'
-import UserNotExists from '../common/errors/custom/UserNotExists'
+import BadCookie from '../common/errors/custom/BadCookie'
 interface Isession {
   id: string
   username: string
@@ -28,7 +28,6 @@ passport.use(
     } catch (e) {
       return done(e)
     }
-
     // 2. Check if password matches
     try {
       const match = await User.comparePassword(password, user.password)
@@ -59,7 +58,7 @@ passport.deserializeUser(async (session: Isession, done) => {
   try {
     const user = await User.findById(session.id)
     if (!user) {
-      return done(new UserNotExists('User not exists'), false) // if user does not exist but session still exists delete session
+      return done(new BadCookie('User not exists'), false) // if user does not exist but session still exists delete session
     }
     done(undefined, user)
   } catch (e) {

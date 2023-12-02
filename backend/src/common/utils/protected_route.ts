@@ -9,6 +9,8 @@ export default function protected_route(info: {
   if(config.NODE_ENV!=='test'){
     if (info.authenthication_route) {
       if (req.isAuthenticated()) {
+        console.log(req.session.passport.user.ip)
+        console.log(req.socket.remoteAddress)
         if(req.session.passport.user.ip !==req.socket.remoteAddress) throw new BadCookie('Bad cookie')// if user authenthicated and ip s do not match with the one inside of the coookie delete cookie
         return res.json({
           data: {
@@ -25,7 +27,7 @@ export default function protected_route(info: {
             message: 'User not loggedIn',
           },
         })
-        else if(req.session.passport.user.ip !==req.socket.remoteAddress) throw new BadCookie('Bad cookie') 
+        else if(req.session.passport.user.ip !==req.socket.remoteAddress) throw new BadCookie('Bad cookie')
         
    }
   }

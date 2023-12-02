@@ -2,6 +2,7 @@ import Template from '../template'
 
 export default class BadRequest extends Template {
   statusCode = 400
+
   constructor(
     public message,
     public field

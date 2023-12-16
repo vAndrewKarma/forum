@@ -77,7 +77,7 @@ usersController.newz_Location = async (
     if (rez == null || rez !== token) throw new CredentialsError('Invalid link')
     const user = await findUserBy('_id', uid)
     if (!user) throw new CredentialsError('Invalid link')
-    user.ip = req.socket.remoteAddress
+    user.ip.push(req.socket.remoteAddress)
     user.save()
     // TODO delete from redis link
     res.json({ succes: true })

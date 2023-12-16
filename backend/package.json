@@ -4,7 +4,7 @@
   "description": "A simple Forum app which can be used as a template. The app is based on a MVC pattern (model-view-controller).",
   "scripts": {
     "start": "node dist/index.js",
-    "dev": "nodemon -L",
+    "dev": "nodemon -L --watch . --polling",
     "test": "jest --watchAll",
     "test:ci": "jest",
     "prettier": "prettier --check **/*.js",

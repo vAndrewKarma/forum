@@ -35,7 +35,7 @@ AuthController.Login = async (
 
         if (!user) throw new CredentialsError(info.message)
 
-        if (user.ip !== req.socket.remoteAddress) {
+        if (!user.ip.includes(req.socket.remoteAddress)) {
           try {
             await NewLocation(user.email, user._id)
             return res.json({ message: 'Verify your email' })

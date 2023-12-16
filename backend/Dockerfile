@@ -1,5 +1,5 @@
 # Development Stage
-FROM node:20-alpine3.17 AS development
+FROM node:alpine AS development
 
 # Set the working directory
 WORKDIR /backend
@@ -27,8 +27,6 @@ ENV CLIENT=http://localhost:4000
 # Expose port for development
 EXPOSE ${PORT}
 
-# Rebuild bcrypt module
-RUN npm rebuild bcrypt --build-from-source
 
 # Specify the command to run when the container starts
 CMD ["node", "dist/index.js"]

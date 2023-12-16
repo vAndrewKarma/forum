@@ -24,8 +24,8 @@ export default async function ExpressInit(): Promise<Application> {
   if (config.NODE_ENV === 'production')
     app.set('trust proxy', 1), app.use(compression)
   else app.use(compression({ level: 3 }))
-  
-  const {sconfig} = await Get_Session_Details()
+
+  const { sconfig } = await Get_Session_Details()
   app.use(session(sconfig))
 
   app.use(passport.initialize())

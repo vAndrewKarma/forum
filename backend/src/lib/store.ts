@@ -2,6 +2,7 @@ import RedisStore from 'connect-redis'
 import { createClient } from 'redis'
 import { logger } from '../config/logger'
 import config from '../config'
+import RedisMemoryServer from 'redis-memory-server'
 
 export default async function Init_Store() {
   let client = null
@@ -10,6 +11,7 @@ export default async function Init_Store() {
     client = createClient({
       url: config.cache,
     })
+
     client
       .on('error', (err) => {
         logger.error(`Redis connection error: ${err}`)
@@ -17,10 +19,10 @@ export default async function Init_Store() {
       .on('connect', () => {
         logger.info('Connected to Redis')
       })
-    await client.connect().catch(logger.error)
+    await client.connect().catch(logger.error, 'sal')
   }
 
-  if (client != null) {
+  if ((await client) != null) {
     return {
       data: {
         store: new RedisStore({
@@ -31,5 +33,13 @@ export default async function Init_Store() {
       },
     }
   }
-  return null
+  return {
+    data: {
+      store: new RedisStore({
+        client: new RedisMemoryServer(),
+        ttl: 24 * 60 * 60,
+      }),
+      client,
+    },
+  }
 }

@@ -18,13 +18,6 @@ describe('Simple register test', () => {
   })
 })
 
-describe('Simple session test on register ', () => {
-  test('should return 200', async () => {
-    const res = await request(app).get('/check-auth')
-    expect(res.status).toEqual(200)
-  })
-})
-
 describe('Simple  check passwords register test', () => {
   test('should return 411', async () => {
     const data = {

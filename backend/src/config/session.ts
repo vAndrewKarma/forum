@@ -1,4 +1,3 @@
-import { MemoryStore } from 'express-session'
 import config from '.'
 import Init_Store from '../lib/store'
 export default async function Get_Session_Details() {
@@ -20,8 +19,7 @@ export default async function Get_Session_Details() {
   }
   if (store !== null && store.data.store && store.data.client) {
     session_config['store'] = store.data.store
-  } else {
-    session_config['store'] = new MemoryStore()
   }
-  return {sconfig:session_config,client:store.data.client || null}
+
+  return { sconfig: session_config, client: store.data.client || null }
 }

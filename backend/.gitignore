@@ -5,3 +5,4 @@ logs
 coverage
 dist
 .vercel
+app-secrets.yaml

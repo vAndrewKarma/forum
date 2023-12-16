@@ -6,7 +6,16 @@ import { validateLogin } from '../common/utils/validation'
 import { logger } from '../config/logger'
 import { NewLocation } from '../services/mail.service'
 
-export const Login = async (
+type TAuthController = {
+  Login: (req: Request, res: Response, next: NextFunction) => void
+  Logout: (req: Request, res: Response, _next: NextFunction) => void
+}
+export const AuthController: TAuthController = {
+  Login: undefined,
+  Logout: undefined,
+}
+
+AuthController.Login = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -25,16 +34,16 @@ export const Login = async (
         }
 
         if (!user) throw new CredentialsError(info.message)
-        
-        if(user.ip!==req.socket.remoteAddress){
-   try{
- await NewLocation(user.email,user._id)
- return res.json({message:'Verify your email'})
-    }catch(err){
-    return next(err)
-  }
-}
-    await new Promise<void>((resolve, reject) => {
+
+        if (user.ip !== req.socket.remoteAddress) {
+          try {
+            await NewLocation(user.email, user._id)
+            return res.json({ message: 'Verify your email' })
+          } catch (err) {
+            return next(err)
+          }
+        }
+        await new Promise<void>((resolve, reject) => {
           req.logIn(user, (err) => {
             if (err) reject(err)
             resolve()
@@ -53,7 +62,7 @@ export const Login = async (
   }
 }
 
-export const Logout = async (
+AuthController.Logout = async (
   req: Request,
   res: Response,
   _next: NextFunction

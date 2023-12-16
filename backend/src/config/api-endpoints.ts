@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
-import { metrics } from '../controller/status'
-import { Signup } from '../controller/user'
-import { Login, Logout } from '../controller/auth'
+import { statusController } from '../controller/status'
+import { usersController } from '../controller/user'
+import { AuthController } from '../controller/auth'
 type EndpointTypes = 'auth' | 'user' | 'status'
 
 type ApiEndpoint = {
@@ -10,7 +10,6 @@ type ApiEndpoint = {
     controller: (req: Request, res: Response, next: NextFunction) => void
   }
 }
-
 type ApiEndpoints = {
   [key in EndpointTypes]: ApiEndpoint // used a mapped type to define ApiEndpoints
 }
@@ -23,28 +22,35 @@ const endpoint: ApiEndpoints = {
     },
     _metricz: {
       route: '/_metricz',
-      controller: metrics,
+      controller: statusController.metrics,
     },
   },
   user: {
     register: {
       route: '/register',
-      controller: Signup,
+      controller: usersController.Signup,
     },
   },
   auth: {
     login: {
       route: '/login',
-      controller: Login,
+      controller: AuthController.Login,
     },
     logout: {
       route: '/logout',
-      controller: Logout,
+      controller: AuthController.Logout,
     },
     check_auth: {
       route: '/check-auth',
       controller: (_req: Request, res: Response) =>
-        res.json({ data: { loggedIn: true, message: 'User logged in' } }),
+        res
+          .status(201)
+          .json({ data: { loggedIn: true, message: 'User logged in' } }),
+    },
+
+    new_location: {
+      route: '/new_location',
+      controller: usersController.newz_Location,
     },
   },
 }

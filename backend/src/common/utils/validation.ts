@@ -42,9 +42,27 @@ export const LoginUser = z.object({
   rememberMe: z.boolean(),
 })
 
+const NEW_location = z.object({
+  uid: z
+    .string()
+    .min(10, 'Invalid link')
+    .max(60, 'Invalid link')
+    .toLowerCase()
+    .regex(/^[a-zA-Z0-9]+$/, 'Invalid link'),
+  token: z
+    .string()
+    .min(10, 'Invalid link')
+    .max(60, 'Invalid link')
+    .regex(/^[a-zA-Z0-9]+$/, 'Invalid link')
+    .toLowerCase(),
+})
+
 export type UserType = z.infer<typeof RegisterUser>
 
 export const validateRegister = (user: UserType) => RegisterUser.parse(user)
 
 export const validateLogin = (user: z.infer<typeof LoginUser>) =>
   LoginUser.parse(user)
+
+export const validateNewLocation = (new_loc: z.infer<typeof NEW_location>) =>
+  NEW_location.parse(new_loc)

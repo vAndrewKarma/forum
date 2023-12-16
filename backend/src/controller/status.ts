@@ -1,3 +1,4 @@
+import { Request, Response } from 'express'
 import {
   getCPUUsage,
   getFreeMemory,
@@ -5,9 +6,14 @@ import {
   getTotalMemory,
   getUsedMemory,
 } from '../common/utils/metrics'
-import { Response, Request } from 'express-serve-static-core'
 
-export const metrics = (_req: Request, res: Response) =>
+type TstatusController = {
+  metrics: (_req: Request, res: Response) => void
+}
+export const statusController: TstatusController = {
+  metrics: undefined,
+}
+statusController.metrics = (_req: Request, res: Response) =>
   res.json({
     cpuUsage: `${getCPUUsage()}%`,
     totalMemory: `${getTotalMemory()} MB`,

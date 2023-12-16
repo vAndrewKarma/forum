@@ -3,15 +3,22 @@ import request from 'supertest'
 import { app } from '../setup'
 
 describe('Simple login test', () => {
-  test('should return 200', async () => {
-    const data = {
+
+  test('should return 200 after login', async () => {
+    const loginData = {
       password: 'ssszzsA37a!',
       username: 'kzzddddddddzzzz',
       rememberMe: true,
     }
-    const res = await request(app).post('/login').send(data)
-    expect(res.status).toEqual(200)
+
+    // Make a request to /login and store the cookie
+    const loginRes = await request(app).post('/login').send(loginData)
+    expect(loginRes.status).toEqual(200)
+
+  
   })
+  
+  
 })
 
 describe('Simple login test username fails', () => {

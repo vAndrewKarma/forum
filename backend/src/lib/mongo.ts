@@ -4,10 +4,11 @@ import { connectionOptions } from '../config/mongo'
 import { logger } from '../config/logger'
 mongoose.Promise = global.Promise
 mongoose.connect(config.db, connectionOptions)
-mongoose.connection.on('error', () => {
+mongoose.connection.on('error', (err) => {
   logger.debug(
     'MongoDB Connection Error. Please make sure that MongoDB is running.'
   )
+  logger.error(err)
   process.exit(1)
 })
 mongoose.connection.on('connected', function () {

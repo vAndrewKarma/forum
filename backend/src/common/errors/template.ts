@@ -1,7 +1,6 @@
-
 export default abstract class Template extends Error {
   abstract statusCode: number
-  public logout: boolean;
+  public logout: boolean
   constructor(
     message: string,
     public field?: string
@@ -11,6 +10,6 @@ export default abstract class Template extends Error {
   }
   handler?(): void {
     // Default implementation does nothing
-  } 
+  }
   abstract serializer(): { message: string; field?: string }
 }

@@ -15,7 +15,7 @@ export const createUser = ({
   email: string
   password: string
   gender: string
-  ip:string
+  ip: string
   firstName?: string
   lastName?: string
-}) => new User({ username, email, password, gender,ip, firstName, lastName })
+}) => new User({ username, email, password, gender, ip, firstName, lastName })

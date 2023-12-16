@@ -1,9 +1,8 @@
-import Init_Store from "./store";
+import Init_Store from './store'
 async function client_init() {
- 
-const store = await Init_Store()   
-return store.data.client
+  const store = await Init_Store()
+  return store.data.client
 }
 
-
-export default await client_init()
+const client = client_init()
+export default client

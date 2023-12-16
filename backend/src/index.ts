@@ -18,7 +18,7 @@ import { logger } from './config/logger'
         .createServer(app)
         .listen(app.get('port'), function () {
           logger.info(
-            `Listening to ${app.get('port')} - ENV: ${config.NODE_ENV} - Pid ${
+            `Liste ning to ${app.get('port')} - ENV: ${config.NODE_ENV} - Pid ${
               process.pid
             }`
           )

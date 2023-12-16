@@ -33,13 +33,14 @@ export default async function Init_Store() {
       },
     }
   }
+  const memorycache = new RedisMemoryServer()
   return {
     data: {
       store: new RedisStore({
-        client: new RedisMemoryServer(),
+        client: memorycache,
         ttl: 24 * 60 * 60,
       }),
-      client,
+      memorycache,
     },
   }
 }

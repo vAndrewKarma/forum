@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ../backend/.
+      target: development
+    ports:
+      - '4000:4000'
+    environment:
+      - NODE_ENV=development
+      - MONGO_URI=mongodb://root:example@mongo:27017/forum?authSource=admin
+      - REDIS_URL=redis://redis:6379
+      - SESSION_SECRET=dsadsadsadsa
+      - EMAIL_USER=lia17@ethereal.email
+      - PASSWORD_USER=GAwJvDYNu1wNhXHAJQ
+      - MAIL_SERVICE=smtp.ethereal.email
+      - MAIL_PORT=587
+    depends_on:
+      - mongo
+      - redis
+      - mongo-express
+    volumes:
+      - ../backend:/backend
+      - /backend/node_modules
+    command: npm run dev
+
+  mongo:
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: example
+      ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
+
+  redis:
+    image: redis:latest
+    ports:
+      - '6379:6379'
+
+networks:
+  default:
+    external:
+      name: backend_network

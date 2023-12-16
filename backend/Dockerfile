@@ -4,7 +4,7 @@ FROM node:20-alpine3.17 AS development
 # Set the working directory
 WORKDIR /backend
 
-# Install build tools
+# Install build tools and dependencies
 RUN apk add --no-cache make gcc g++ python3
 
 # Copy only the necessary files for npm install
@@ -14,7 +14,7 @@ COPY ./package*.json ./
 RUN npm install
 
 # Copy the rest of the application code
-COPY ./ ./
+COPY ./ .
 
 # Run any other commands for additional debugging if needed
 RUN npm run build
@@ -27,5 +27,8 @@ ENV CLIENT=http://localhost:4000
 # Expose port for development
 EXPOSE ${PORT}
 
+# Rebuild bcrypt module
+RUN npm rebuild bcrypt --build-from-source
+
 # Specify the command to run when the container starts
-CMD ["npm", "run", "dev"]
+CMD ["node", "dist/index.js"]

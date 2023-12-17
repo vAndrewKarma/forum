@@ -26,10 +26,9 @@ export const helmetOptions: HelmetOptions = {
 }
 
 export const corsOptions = {
-  exposedHeaders: 'Authorization', // figure out which other
+  exposedHeaders: 'Authorization',
   allowedHeaders: ['Authorization', 'Content-type', 'Content-Length', 'Origin'],
   credentials: true,
-
   origin: [
     `https://${config.client}`,
     `http://${config.client}`,

@@ -15,7 +15,7 @@ module.exports = {
   rules: {
     '@typescript-eslint/no-unused-vars': [
       'error',
-      { argsIgnorePattern: '^_[rR]eq$|^_[rR]es$|^_[nN]ext$' },
+      { argsIgnorePattern: '^_[rR]eq$|^_[rR]es$|^_[nN]ext$' }, //ignore _req, _res and _next
     ],
     '@typescript-eslint/no-var-requires': 0,
   },

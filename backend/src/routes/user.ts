@@ -1,8 +1,8 @@
-import express from 'express'
+import { Router } from 'express'
 
 import protected_route from '../common/utils/protected_route'
 import endpoint from '../config/api-endpoints'
-const router = express.Router()
+const router = Router()
 
 // Register route
 router.post(

@@ -16,16 +16,16 @@ export function getCPUUsage() {
 }
 
 export function getTotalMemory() {
-  return (os.totalmem() / (1024 * 1024)).toFixed(2) // Convert to MB for better readability
+  return (os.totalmem() / (1024 * 1024)).toFixed(2)
 }
 
 export function getFreeMemory() {
-  return (os.freemem() / (1024 * 1024)).toFixed(2) // Convert to MB for better readability
+  return (os.freemem() / (1024 * 1024)).toFixed(2)
 }
 
 export function getUsedMemory() {
   const usedMemory = os.totalmem() - os.freemem()
-  return (usedMemory / (1024 * 1024)).toFixed(2) // Convert to MB for better readability
+  return (usedMemory / (1024 * 1024)).toFixed(2)
 }
 
 export function getProcessUptime() {

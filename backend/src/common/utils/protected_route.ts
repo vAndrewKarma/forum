@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
 import BadCookie from '../errors/custom/BadCookie'
 import config from '../../config'
+import { logger } from '../../config/logger'
 
 export default function protected_route(info: {
   authenthication_route?: boolean
@@ -14,7 +15,7 @@ export default function protected_route(info: {
           if (
             !req.session.passport.user.ip.includes(req.socket.remoteAddress)
           ) {
-            console.log('test')
+            logger.debug('ip s do not match')
             throw new BadCookie('Bad cookie') // if user authenthicated and ip s do not match with the one inside of the coookie delete cookie
           }
           return res.json({

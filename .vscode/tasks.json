@@ -1,0 +1,17 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "npm",
+      "script": "ready",
+      "path": "backend",
+      "problemMatcher": [],
+      "label": "npm: ready - backend",
+      "detail": "npm run format && npm run lint && npm run build",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    }
+  ]
+}

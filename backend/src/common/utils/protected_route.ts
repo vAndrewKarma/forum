@@ -33,8 +33,10 @@ export default function protected_route(info: {
               message: 'User not loggedIn',
             },
           })
-        else if (req.session.passport.user.ip !== req.socket.remoteAddress)
+        else if (req.session.passport.user.ip !== req.socket.remoteAddress) {
+          logger.debug('ip s do not match')
           throw new BadCookie('Bad cookie')
+        }
       }
     }
     return next()

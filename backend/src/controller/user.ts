@@ -7,7 +7,7 @@ import {
 } from '../common/utils/validation'
 
 import { UserDocument } from '../models/user'
-import { createUser, findUserBy } from '../services/user.service'
+import { createUser, findUserBy, saveUser } from '../services/user.service'
 import { logger } from '../common/utils/logger'
 import { redfindBy } from '../services/redis.service'
 import CredentialsError from '../common/errors/custom/CredentialsError'
@@ -43,7 +43,7 @@ usersController.Signup = async (
     if (email_exists) throw new BadRequest('Email already used', 'email')
 
     const user = createUser({ ...sanitized, ip: req.socket.remoteAddress })
-    await user.save()
+    await saveUser(user)
     if (user._id) {
       await new Promise<void>((resolve, reject) => {
         req.logIn(user, (err) => {
@@ -78,7 +78,7 @@ usersController.newz_Location = async (
     const user = await findUserBy('_id', uid)
     if (!user) throw new CredentialsError('Invalid link')
     user.ip.push(req.socket.remoteAddress)
-    user.save()
+    await saveUser(user)
     // TODO delete from redis link
     res.json({ succes: true })
   } catch (err) {

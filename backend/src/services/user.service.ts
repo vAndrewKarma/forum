@@ -1,4 +1,4 @@
-import { User } from '../models/user'
+import { User, UserDocument } from '../models/user'
 
 export const findUserBy = async (prop: string, value: string) =>
   await User.findOne({ [prop]: value })
@@ -19,3 +19,7 @@ export const createUser = ({
   firstName?: string
   lastName?: string
 }) => new User({ username, email, password, gender, ip, firstName, lastName })
+
+export const saveUser = async (user :UserDocument) => {
+  await user.save()
+}

@@ -1,6 +1,6 @@
 import RedisStore from 'connect-redis'
 import { createClient } from 'redis'
-import { logger } from '../config/logger'
+import { logger } from '../common/utils/logger'
 import config from '../config'
 import RedisMemoryServer from 'redis-memory-server'
 

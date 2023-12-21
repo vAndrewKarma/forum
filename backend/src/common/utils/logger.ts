@@ -1,11 +1,10 @@
 import winston from 'winston'
-import config from './index'
 import path from 'path'
 
 // configure format
 const enumError = winston.format((info) => {
   // a simple function  which returns the stack trace also when logger.error is fired
-  if (info instanceof Error && config.NODE_ENV === 'development') {
+  if (info instanceof Error && process.env.NODE_ENV === 'development') {
     // i think it is better to log  traced errors only if we using development
     Object.assign(info, { message: info.stack })
   }
@@ -33,10 +32,10 @@ const time = new Date().toTimeString().slice(0, 9)
 const date = new Date().toISOString().slice(0, 10)
 
 export const logger = winston.createLogger({
-  level: config.NODE_ENV === 'development' ? 'debug' : 'info',
+  level: process.env.NODE_ENV === 'development' ? 'debug' : 'info',
   format: winston.format.combine(
     enumError(),
-    config.NODE_ENV === 'development'
+    process.env.NODE_ENV === 'development'
       ? winston.format.colorize()
       : winston.format.uncolorize(),
     winston.format.splat(), // log mesages with placeholders

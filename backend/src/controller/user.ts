@@ -8,7 +8,7 @@ import {
 
 import { UserDocument } from '../models/user'
 import { createUser, findUserBy } from '../services/user.service'
-import { logger } from '../config/logger'
+import { logger } from '../common/utils/logger'
 import { redfindBy } from '../services/redis.service'
 import CredentialsError from '../common/errors/custom/CredentialsError'
 

@@ -1,7 +1,7 @@
 import config from '../config'
 import mongoose from 'mongoose'
 import { connectionOptions } from '../config/mongo'
-import { logger } from '../config/logger'
+import { logger } from '../common/utils/logger'
 mongoose.Promise = global.Promise
 mongoose.connect(config.db, connectionOptions)
 mongoose.connection.on('error', (err) => {

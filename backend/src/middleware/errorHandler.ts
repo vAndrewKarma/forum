@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
 import { ZodError } from 'zod'
-import Template from '../errors/template'
-import endpoint from '../../config/api-endpoints'
+import Template from '../common/errors/template'
+import endpoint from '../config/api-endpoints'
 
 export default function errorHandler(
   err: Error,

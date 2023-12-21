@@ -3,7 +3,7 @@ import { UserDocument } from '../models/user'
 import passport from '../config/passport'
 import CredentialsError from '../common/errors/custom/CredentialsError'
 import { validateLogin } from '../common/utils/validation'
-import { logger } from '../config/logger'
+import { logger } from '../common/utils/logger'
 import { NewLocation } from '../services/mail.service'
 
 type TAuthController = {

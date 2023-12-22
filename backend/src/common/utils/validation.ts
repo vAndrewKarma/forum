@@ -26,12 +26,7 @@ export const RegisterUser = z
   })
 
 export const LoginUser = z.object({
-  username: z
-    .string()
-    .min(3, 'Invalid credentials')
-    .max(20, 'Invalid credentials')
-    .toLowerCase()
-    .regex(/^[a-zA-Z0-9]+$/, 'Invalid credentials'),
+  email: z.string().email().max(40, 'Email can be maximum 40 characters'),
   password: z
     .string()
     .min(8, 'Invalid credentials')
@@ -39,7 +34,6 @@ export const LoginUser = z.object({
     .regex(/[0-9]/, 'Invalid credentials')
     .regex(/[!@#$%^&*]/, 'Invalid credentials')
     .max(16, 'Invalid credentials'),
-  rememberMe: z.boolean(),
 })
 
 const NEW_location = z.object({

@@ -2,7 +2,6 @@ import { Request, Response, NextFunction } from 'express'
 import { UserDocument } from '../models/user'
 import passport from '../config/passport'
 import CredentialsError from '../common/errors/custom/CredentialsError'
-import { validateLogin } from '../common/utils/validation'
 import { logger } from '../common/utils/logger'
 import { NewLocation } from '../services/mail.service'
 
@@ -21,7 +20,6 @@ AuthController.Login = async (
   next: NextFunction
 ) => {
   try {
-    validateLogin(req.body)
     passport.authenticate(
       'local',
       async function (

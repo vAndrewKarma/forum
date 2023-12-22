@@ -27,8 +27,8 @@ usersController.Signup = async (
   next: NextFunction
 ) => {
   try {
-    validateRegister(req.body)
-    const sanitized: UserDocument = sanitize(req.body)
+    const data = JSON.parse(JSON.stringify(validateRegister(req.body)))
+    const sanitized: UserDocument = sanitize(data)
     const username_exists = await UserMethods.findUserBy(
       'username',
       sanitized.username.toLowerCase()
@@ -73,11 +73,12 @@ usersController.newz_Location = async (
   next: NextFunction
 ) => {
   try {
-    validateNewLocation(req.body)
-    const { uid, token } = req.body
+    const data = JSON.parse(JSON.stringify(validateNewLocation(req.body)))
+    const token = sanitize(data.token)
+    const uid = sanitize(data.uid)
     const rez = await redServ.redfindBy(`new_location: ${token}`)
     if (rez == null || rez !== uid) throw new CredentialsError('Invalid link')
-    // TODO delete from redis link below here.
+    await redServ.redDel(`new_location: ${token}`)
     const user = await UserMethods.findUserBy('_id', uid)
     if (!user) throw new CredentialsError('Invalid link')
 

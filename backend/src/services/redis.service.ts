@@ -7,10 +7,12 @@ type TredServ = {
     time: number,
     data: string | object
   ) => Promise<void>
+  redDel: (delete_expression: string) => Promise<void>
 }
 export const redServ: TredServ = {
   redfindBy: undefined,
   redSetEx: undefined,
+  redDel: undefined,
 }
 
 redServ.redfindBy = async (find_expression: string) => {
@@ -24,9 +26,11 @@ redServ.redSetEx = async (
   time: number,
   data: string | object
 ) => {
-  console.log('executed')
   const client = await redclient
-  client.setEx(create_expression, time, data)
+  await client.setEx(create_expression, time, data)
+}
 
-  console.log('executed2 ')
+redServ.redDel = async (delete_expression: string) => {
+  const client = await redclient
+  await client.del(delete_expression)
 }

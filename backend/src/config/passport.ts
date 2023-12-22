@@ -4,6 +4,9 @@ import { User, UserDocument } from '../models/user'
 import { UserMethods } from '../services/user.service'
 import CredentialsError from '../common/errors/custom/CredentialsError'
 import BadCookie from '../common/errors/custom/BadCookie'
+import { validateLogin } from '../common/utils/validation'
+import sanitize from '../common/utils/mongo-sanitize'
+import { logger } from '../common/utils/logger'
 interface Isession {
   id: string
   username: string
@@ -13,15 +16,21 @@ interface Isession {
 
 passport.use(
   'local',
-  new LocalStrategy({ usernameField: 'username' }, async function (
-    username,
+  new LocalStrategy({ usernameField: 'email' }, async function (
+    // instead of using the username i will use the email...
+    email,
     password,
     done
   ) {
     let user: UserDocument
+    logger.debug(email)
     // 1. Check if the user is found
     try {
-      user = await UserMethods.findUserBy('username', username)
+      const data = JSON.parse(
+        JSON.stringify(validateLogin({ email: email, password: password }))
+      )
+      const uname = sanitize(data.email)
+      user = await UserMethods.findUserBy('email', uname)
       if (!user) {
         return done(new CredentialsError('Invalid credentials'), false)
       }
@@ -30,7 +39,13 @@ passport.use(
     }
     // 2. Check if password matches
     try {
-      const match = await User.comparePassword(password, user.password)
+      const data = JSON.parse(
+        JSON.stringify(validateLogin({ email: email, password: password }))
+      )
+      const match = await User.comparePassword(
+        sanitize(data.password),
+        user.password
+      )
       if (!match) {
         return done(new CredentialsError('Invalid credentials'), false)
       }

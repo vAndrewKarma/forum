@@ -1,7 +1,7 @@
 import passport from 'passport'
 import { Strategy as LocalStrategy } from 'passport-local'
 import { User, UserDocument } from '../models/user'
-import { findUserBy } from '../services/user.service'
+import { UserMethods } from '../services/user.service'
 import CredentialsError from '../common/errors/custom/CredentialsError'
 import BadCookie from '../common/errors/custom/BadCookie'
 interface Isession {
@@ -21,7 +21,7 @@ passport.use(
     let user: UserDocument
     // 1. Check if the user is found
     try {
-      user = await findUserBy('username', username)
+      user = await UserMethods.findUserBy('username', username)
       if (!user) {
         return done(new CredentialsError('Invalid credentials'), false)
       }

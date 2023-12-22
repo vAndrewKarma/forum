@@ -1,11 +1,10 @@
 import { randomBytes } from 'crypto'
-import redclient from '../lib/redclient'
-
+import { redServ } from './redis.service'
 const genTokenForNewLocation = async (uid: string) => {
   const string = randomBytes(20).toString('hex')
 
-  const client = await redclient
-  client.setEx(`new_location: ${uid}`, 86400, string)
+  await redServ.redSetEx(`new_location: ${string}`, 86400, uid.toString())
+
   return string
 }
 

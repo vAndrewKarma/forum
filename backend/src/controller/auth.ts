@@ -3,8 +3,7 @@ import { UserDocument } from '../models/user'
 import passport from '../config/passport'
 import CredentialsError from '../common/errors/custom/CredentialsError'
 import { logger } from '../common/utils/logger'
-import { NewLocation } from '../services/mail.service'
-
+import { EmailServ } from '../services/mail.service'
 type TAuthController = {
   Login: (req: Request, res: Response, next: NextFunction) => void
   Logout: (req: Request, res: Response, _next: NextFunction) => void
@@ -35,7 +34,7 @@ AuthController.Login = async (
 
         if (!user.ip.includes(req.socket.remoteAddress)) {
           try {
-            await NewLocation(user.email, user._id)
+            await EmailServ.NewLocation(user.email, user._id)
             return res.json({ message: 'Verify your email' })
           } catch (err) {
             return next(err)

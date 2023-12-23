@@ -1,9 +1,16 @@
 import config from '../config'
 import transporter from '../config/nodemailer'
-import genTokenForNewLocation from './tokens.service'
+import { tokenServ } from './tokens.service'
 
-export const NewLocation = async (email: string, uid: string) => {
-  const token = await genTokenForNewLocation(uid)
+type TEmailServ = {
+  NewLocation: (email: string, uid: string) => Promise<void>
+}
+export const EmailServ: TEmailServ = {
+  NewLocation: undefined,
+}
+
+EmailServ.NewLocation = async (email: string, uid: string) => {
+  const token = await tokenServ.genTokenForNewLocation(uid)
   console.log('problem3')
   const mailOptions = {
     from: config.app.email_user,

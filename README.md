@@ -1,7 +1,12 @@
 TODO:
 ADD DOCUMENTATION.
-Configure remember me
+
+<!-- Configure remember me -->
+
 Add re captcha
 add csfr protection
 add reset password.
-change tests and add db to them 
+change tests and add db to them
+
+add more tests
+configure for github

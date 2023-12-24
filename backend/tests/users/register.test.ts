@@ -1,7 +1,7 @@
 import { describe, expect, test } from '@jest/globals'
 import request from 'supertest'
 import { app } from '../setup'
-
+let cookie
 describe('Simple register test', () => {
   test('should return 200', async () => {
     const data = {
@@ -15,6 +15,42 @@ describe('Simple register test', () => {
     }
     const res = await request(app).post('/register').send(data)
     expect(res.status).toEqual(200)
+    cookie = res.headers['set-cookie']
+
+    const secondRequestRes = await request(app)
+      .post('/check-auth')
+      .set('Cookie', cookie)
+    expect(secondRequestRes.body.data.loggedIn).toBe(true)
+  })
+})
+
+describe('Simple register test', () => {
+  test('should return 200', async () => {
+    await request(app).post('/register').send({
+      email: 'kdaadddzd6ail@gmail.com',
+      password: 'ssszzsA37a!',
+      firstName: 'dsadzsadsa',
+      confirm_password: 'ssszzsA37a!',
+      lastName: 'dsadsadsa',
+      gender: 'Female',
+      username: 'kzzdddddddzzzz',
+    })
+
+    const res = await request(app)
+      .post('/register')
+      .send({
+        email: 'kdaadddzzzzz1zd6ail@gmail.com',
+        password: 'ssszzsA37a!',
+        firstName: 'dsadzsadsa',
+        confirm_password: 'ssszzsA37a!',
+        lastName: 'dsadsadsa',
+        gender: 'Female',
+        username: 'kzzdd1ddddzzzzzzzzdzzzz',
+      })
+      .set('Cookie', cookie)
+
+    expect(res.body.data.loggedIn).toBe(true)
+    expect(res.body.data.message).toBe('User already loggedIn')
   })
 })
 

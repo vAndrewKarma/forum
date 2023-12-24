@@ -15,5 +15,6 @@ export default {
   cache: process.env.REDIS_URL || 'redis://127.0.0.1:6379',
   tests: {
     cache: process.env.TESTS_CACHE_URL || '',
+    db: process.env.DB_URI_TESTS || '',
   },
 }

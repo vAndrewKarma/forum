@@ -6,6 +6,7 @@
 export default {
   clearMocks: true,
   collectCoverage: true,
+  testTimeout: 5000,
   setupFilesAfterEnv: ['./tests/setup.ts'],
   coverageDirectory: 'coverage',
   coverageProvider: 'v8',

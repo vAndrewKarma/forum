@@ -11,6 +11,9 @@ on:
 
 jobs:
   build:
+    env:
+      DB_URI_TESTS: ${{ secrets.DB_URI_TESTS }}
+      TESTS_CACHE_URL: ${{ secrets.TESTS_CACHE_URL }}
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -23,15 +26,15 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
-        
+
         uses: actions/setup-node@v3
         with:
           cache: npm
           node-version: ${{ matrix.node-version }}
           cache-dependency-path: ./backend/package-lock.json
-          
+
       - run: npm i
- 
+
       - run: npm run ready --if-present
-  
+
       - run: npm run test:ci

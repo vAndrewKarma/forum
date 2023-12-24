@@ -48,4 +48,4 @@ jobs:
       - name: Use Variables in a Step
         run: |
           cat .env # Display the content of the created .env file
-      - run: yarn run ready --if-present
+      - run: npm run ready --if-present

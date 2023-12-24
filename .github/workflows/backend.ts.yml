@@ -10,8 +10,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      DB_URI_TESTS: ${{ secrets.DB_URI_TESTS }}
-      TESTS_CACHE_URL: ${{ secrets.TESTS_CACHE_URL }}
+      DB_URI_TESTS: ${{ vars.DB_URI_TESTS }}
+      TESTS_CACHE_URL: ${{ vars.TESTS_CACHE_URL }}
     defaults:
       run:
         working-directory: ./backend/

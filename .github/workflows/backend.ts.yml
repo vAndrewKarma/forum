@@ -24,10 +24,6 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-      - name: Use Variables in a Step
-        run: |
-          echo "My variable is  ${{ github.DB_URI_TESTS }}"
-          echo "Another variable is ${{ github.TESTS_CACHE_URL }}"
       - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
 
@@ -39,8 +35,11 @@ jobs:
 
       - run: npm i
 
+      - name: Use Variables in a Step
+        run: |
+          echo "My variable is  ${{ github.DB_URI_TESTS }}"
+          echo "Another variable is ${{ github.TESTS_CACHE_URL }}"
       - run: npm run ready --if-present
-
       - run: npm run test:ci
         env:
           DB_URI_TESTS: ${{ github.DB_URI_TESTS }}

@@ -48,4 +48,9 @@ jobs:
       - name: Use Variables in a Step
         run: |
           cat .env # Display the content of the created .env file
+      - name: Run Tests (JEST)
+        run: yarn test --ci --silent --testPathIgnorePatterns=experimental
+        env:
+          ENV_VAR_1: ${{ vars.TESTS_CACHE_URL }}
+          ENV_VAR_2: ${{ vars.DB_URI_TESTS }}
       - run: npm run ready --if-present

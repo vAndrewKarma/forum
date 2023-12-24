@@ -1,17 +1,25 @@
-import { describe, expect, test } from '@jest/globals'
+import { afterAll, describe, expect, test } from '@jest/globals'
 import request from 'supertest'
 import { app } from '../setup'
+import mongoose from 'mongoose'
+afterAll(async () => {
+  const collections = await mongoose.connection.db.collections()
+
+  for (const collection of collections) {
+    await collection.deleteMany({})
+  }
+})
 let cookie
 describe('Simple register test', () => {
   test('should return 200', async () => {
     const data = {
-      email: 'kdaadddzd6ail@gmail.com',
+      email: 'kdaaddzdzd6ail@gmail.com',
       password: 'ssszzsA37a!',
       firstName: 'dsadzsadsa',
       confirm_password: 'ssszzsA37a!',
       lastName: 'dsadsadsa',
       gender: 'Female',
-      username: 'kzzdddddddzzzz',
+      username: 'kzzddzdddddzzzz',
     }
     const res = await request(app).post('/register').send(data)
     expect(res.status).toEqual(200)

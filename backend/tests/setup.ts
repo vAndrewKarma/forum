@@ -1,5 +1,5 @@
 import { beforeAll } from '@jest/globals'
-
+import request from 'supertest'
 import ExpressInit from '../src/lib/express'
 import { Application } from 'express'
 import mongoose from 'mongoose'
@@ -18,21 +18,19 @@ beforeAll(async () => {
   client = redis.createClient({
     url: config.tests.cache,
   })
-  await client.connect().catch(console.error)
-  await client.keys('*', (err, rows) => {
-    console.debug(rows)
-    rows.forEach((row) => {
-      console.debug(row)
-      client.del(row)
-    })
-  })
-})
 
-beforeAll(async () => {
-  const collections = await mongoose.connection.db.collections()
-
-  for (const collection of collections) {
-    await collection.deleteMany({})
+  const data = {
+    email: 'kdaaddddzd6ail@gmail.com',
+    password: 'ssszzsA37a!',
+    firstName: 'dsaddzsadsa',
+    confirm_password: 'ssszzsA37a!',
+    lastName: 'dsaddsadsa',
+    gender: 'Female',
+    username: 'kzzddddddddzzzz',
   }
+  await request(app).post('/register').send(data)
+  await client.connect().catch(console.error)
+  await client.disconnect()
 })
+
 export { app }

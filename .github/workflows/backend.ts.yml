@@ -40,7 +40,7 @@ jobs:
           touch .env
           echo ENV_VAR_1=$ENV_VAR_1 >> .env
           echo ENV_VAR_2=$ENV_VAR_2 >> .env
-          npm run npm run test:ci
+          npm run test:ci
         env:
           ENV_VAR_1: ${{ vars.TESTS_CACHE_URL }}
           ENV_VAR_2: ${{ vars.DB_URI_TESTS }}

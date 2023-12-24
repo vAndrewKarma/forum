@@ -35,12 +35,11 @@ jobs:
 
       - run: npm i
 
-      - name: Use Variables in a Step
+      - name: Create env file
         run: |
-          echo "My variable is  ${{ env.DB_URI_TESTS }}"
-          echo "Another variable is ${{ env.TESTS_CACHE_URL }}"
+          touch .env
+          echo TESTS_CACHE_URL=${{ vars.TESTS_CACHE_URL }} >> .env
+          echo DB_URI_TESTS=${{ vars.DB_URI_TESTS }} >> .env
+
       - run: npm run ready --if-present
       - run: npm run test:ci
-        env:
-          DB_URI_TESTS: ${{ env.DB_URI_TESTS }}
-          TESTS_CACHE_URL: ${{ env.TESTS_CACHE_URL }}

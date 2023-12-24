@@ -40,16 +40,23 @@ AuthController.Login = async (
             return next(err)
           }
         }
+
         await new Promise<void>((resolve, reject) => {
           req.logIn(user, (err) => {
             if (err) reject(err)
             resolve()
           })
         })
+
+        req.session.cookie.maxAge =
+          req.body.rememberMe === true
+            ? 7 * 24 * 60 * 60 * 1000
+            : 3 * 60 * 60 * 1000
+
         res.status(200).json({
           data: {
             loggedIn: true,
-            messsage: 'User logged in',
+            message: 'User logged in',
           },
         })
       }

@@ -36,7 +36,7 @@ jobs:
       - run: yarn install
 
       - name: Run Tests (JEST)
-        run: yarn test --ci --silent --testPathIgnorePatterns=experimental
+        run: yarn test:ci --ci --silent --testPathIgnorePatterns=experimental
         env:
           TESTS_CACHE_URL: ${{ vars.TESTS_CACHE_URL }}
           DB_URI_TESTS: ${{ vars.DB_URI_TESTS }}

@@ -1,28 +1,21 @@
-import { afterAll, describe, expect, test } from '@jest/globals'
+import { describe, expect, test } from '@jest/globals'
 import request from 'supertest'
-import { app } from '../setup'
-import mongoose from 'mongoose'
-afterAll(async () => {
-  const collections = await mongoose.connection.db.collections()
+import { app, user } from '../setup'
 
-  for (const collection of collections) {
-    await collection.deleteMany({})
-  }
-})
 let cookie
 describe('Simple register test', () => {
   test('should return 200', async () => {
     const data = {
-      email: 'kdaaddzdzd6ail@gmail.com',
+      email: `${user}@gmail.com`,
       password: 'ssszzsA37a!',
       firstName: 'dsadzsadsa',
       confirm_password: 'ssszzsA37a!',
       lastName: 'dsadsadsa',
       gender: 'Female',
-      username: 'kzzddzdddddzzzz',
+      username: user,
     }
     const res = await request(app).post('/register').send(data)
-    expect(res.status).toEqual(200)
+    expect(res.body.data.loggedIn).toBe(true)
     cookie = res.headers['set-cookie']
 
     const secondRequestRes = await request(app)
@@ -34,20 +27,22 @@ describe('Simple register test', () => {
 
 describe('Simple register test', () => {
   test('should return 200', async () => {
-    await request(app).post('/register').send({
-      email: 'kdaadddzd6ail@gmail.com',
-      password: 'ssszzsA37a!',
-      firstName: 'dsadzsadsa',
-      confirm_password: 'ssszzsA37a!',
-      lastName: 'dsadsadsa',
-      gender: 'Female',
-      username: 'kzzdddddddzzzz',
-    })
+    await request(app)
+      .post('/register')
+      .send({
+        email: `${user}@gmail.com`,
+        password: 'ssszzsA37a!',
+        firstName: 'dsadzsadsa',
+        confirm_password: 'ssszzsA37a!',
+        lastName: 'dsadsadsa',
+        gender: 'Female',
+        username: 'kzzdddddddzzzz',
+      })
 
     const res = await request(app)
       .post('/register')
       .send({
-        email: 'kdaadddzzzzz1zd6ail@gmail.com',
+        email: `${user}@gmail.com`,
         password: 'ssszzsA37a!',
         firstName: 'dsadzsadsa',
         confirm_password: 'ssszzsA37a!',
@@ -65,13 +60,13 @@ describe('Simple register test', () => {
 describe('Simple  check passwords register test', () => {
   test('should return 411', async () => {
     const data = {
-      email: 'kdaadddzd6ail@gmail.com',
+      email: `${user}@gmail.com`,
       password: 'ssszzsA37a!',
       firstName: 'dsadzsadsa',
       confirm_password: 'ssszzsddA37a!',
       lastName: 'dsadsadsa',
       gender: 'Female',
-      username: 'kzzdddddddzzzz',
+      username: user,
     }
     const res = await request(app).post('/register').send(data)
     expect(res.status).toEqual(411)
@@ -117,7 +112,7 @@ describe('Simple register duplicate username test', () => {
       confirm_password: 'ssszzsA37a!',
       lastName: 'dsadsadsa',
       gender: 'Female',
-      username: 'kzzddddddddzzzz',
+      username: user,
     })
 
     const res = await request(app).post('/register').send({
@@ -127,7 +122,7 @@ describe('Simple register duplicate username test', () => {
       confirm_password: 'ssszzsA37a!',
       lastName: 'dsadsadsa',
       gender: 'Female',
-      username: 'kzzddddddddzzzz',
+      username: user,
     })
     expect(res.status).toEqual(400)
   })
@@ -135,25 +130,29 @@ describe('Simple register duplicate username test', () => {
 
 describe('Simple register duplicate email test', () => {
   test('should return 400', async () => {
-    await request(app).post('/register').send({
-      email: 'dsadsadsa@gmail.com',
-      password: 'ssszzsA37a!',
-      firstName: 'dsadzsadsa',
-      confirm_password: 'ssszzsA37a!',
-      lastName: 'dsadsadsa',
-      gender: 'Female',
-      username: 'ddddzzzzz',
-    })
+    await request(app)
+      .post('/register')
+      .send({
+        email: `${user}@gmail.com`,
+        password: 'ssszzsA37a!',
+        firstName: 'dsadzsadsa',
+        confirm_password: 'ssszzsA37a!',
+        lastName: 'dsadsadsa',
+        gender: 'Female',
+        username: 'ddddzzzzz',
+      })
 
-    const res = await request(app).post('/register').send({
-      email: 'dsadsadsa@gmail.com',
-      password: 'ssszzsA37a!',
-      firstName: 'dsadzsadsa',
-      confirm_password: 'ssszzsA37a!',
-      lastName: 'dsadsadsa',
-      gender: 'Female',
-      username: 'ddddzzzzzzzx',
-    })
+    const res = await request(app)
+      .post('/register')
+      .send({
+        email: `${user}@gmail.com`,
+        password: 'ssszzsA37a!',
+        firstName: 'dsadzsadsa',
+        confirm_password: 'ssszzsA37a!',
+        lastName: 'dsadsadsa',
+        gender: 'Female',
+        username: 'ddddzzzzzzzx',
+      })
     expect(res.status).toEqual(400)
   })
 })

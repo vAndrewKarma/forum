@@ -1,5 +1,4 @@
 import { beforeAll } from '@jest/globals'
-import request from 'supertest'
 import ExpressInit from '../src/lib/express'
 import { Application } from 'express'
 import mongoose from 'mongoose'
@@ -8,7 +7,7 @@ import * as redis from 'redis'
 let app: Application
 
 let client
-
+const user = Math.random().toString(36).slice(2, 13)
 beforeAll(async () => {
   app = await ExpressInit()
   await mongoose.connect(config.tests.db, {
@@ -18,19 +17,8 @@ beforeAll(async () => {
   client = redis.createClient({
     url: config.tests.cache,
   })
-
-  const data = {
-    email: 'kdaaddddzd6ail@gmail.com',
-    password: 'ssszzsA37a!',
-    firstName: 'dsaddzsadsa',
-    confirm_password: 'ssszzsA37a!',
-    lastName: 'dsaddsadsa',
-    gender: 'Female',
-    username: 'kzzddddddddzzzz',
-  }
-  await request(app).post('/register').send(data)
   await client.connect().catch(console.error)
   await client.disconnect()
 })
 
-export { app }
+export { app, user }

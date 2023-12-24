@@ -1,17 +1,29 @@
-import { describe, expect, test } from '@jest/globals'
+import { beforeAll, describe, expect, test } from '@jest/globals'
 import request from 'supertest'
-import { app } from '../setup'
-
+import { app, user } from '../setup'
+beforeAll(async () => {
+  const data = {
+    email: `${user}@gmail.com`,
+    password: 'ssszzsA37a!',
+    firstName: 'dsaddzsadsa',
+    confirm_password: 'ssszzsA37a!',
+    lastName: 'dsaddsadsa',
+    gender: 'Female',
+    username: user,
+    rememberMe: true,
+  }
+  await request(app).post('/register').send(data)
+})
 describe('Simple login test', () => {
   test('should return 200 after login', async () => {
     const loginData = {
-      email: 'kdaaddddzd6ail@gmail.com',
+      email: `${user}@gmail.com`,
       password: 'ssszzsA37a!',
       firstName: 'dsaddzsadsa',
       confirm_password: 'ssszzsA37a!',
       lastName: 'dsaddsadsa',
       gender: 'Female',
-      username: 'kzzddddddddzzzz',
+      username: user,
       rememberMe: true,
     }
 

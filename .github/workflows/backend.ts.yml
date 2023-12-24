@@ -35,8 +35,8 @@ jobs:
       - run: yarn install
 
       - name: Generate Coverage
-        run: yarn test
+        run: |
+          export DB_URI_TESTS=mongodb+srv://andrewkarma:3ff09d2A!@cluster0.frqlxhe.mongodb.net/?retryWrites=true&w=majority
+          export TESTS_CACHE_URL=redis://default:m9brEOnVSWkNNED7PQ3s2pvaVSaLXWnS@redis-12980.c135.eu-central-1-1.ec2.cloud.redislabs.com:12980
+          yarn test
       - run: npm run ready --if-present
-
-      - name: Generate Coverage
-        run: yarn test

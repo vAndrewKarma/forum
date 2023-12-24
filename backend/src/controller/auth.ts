@@ -4,6 +4,7 @@ import passport from '../config/passport'
 import CredentialsError from '../common/errors/custom/CredentialsError'
 import { logger } from '../common/utils/logger'
 import { EmailServ } from '../services/mail.service'
+import sanitize from '../common/utils/mongo-sanitize'
 type TAuthController = {
   Login: (req: Request, res: Response, next: NextFunction) => void
   Logout: (req: Request, res: Response, _next: NextFunction) => void
@@ -49,7 +50,7 @@ AuthController.Login = async (
         })
 
         req.session.cookie.maxAge =
-          req.body.rememberMe === true
+          sanitize(req.body.rememberMe) === true
             ? 7 * 24 * 60 * 60 * 1000
             : 3 * 60 * 60 * 1000
 
@@ -74,7 +75,6 @@ AuthController.Logout = async (
   req.logout(() => {
     logger.debug('Logged out')
   })
-  // clear the session cookie on the server and the client
   if (req.session.user) {
     res.clearCookie('user_sid')
     req.session.destroy(function (err) {

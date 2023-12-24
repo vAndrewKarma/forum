@@ -13,4 +13,7 @@ export default {
   db: process.env.MONGO_URI || 'mongodb://localhost:27017/forum',
   client: process.env.CLIENT || 'http://localhost:3000',
   cache: process.env.REDIS_URL || 'redis://127.0.0.1:6379',
+  tests: {
+    cache: process.env.TESTS_CACHE_URL || '',
+  },
 }

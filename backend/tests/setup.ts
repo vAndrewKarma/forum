@@ -1,6 +1,5 @@
 import { afterAll, beforeAll, beforeEach } from '@jest/globals'
 import ExpressInit from '../src/lib/express'
-import { MongoMemoryServer } from 'mongodb-memory-server'
 import { Application } from 'express'
 import request from 'supertest'
 import mongoose from 'mongoose'
@@ -9,8 +8,6 @@ let app: Application
 let mongo: any
 
 beforeAll(async () => {
-  mongo = await MongoMemoryServer.create()
-  const mongoUri = mongo.getUri()
   app = await ExpressInit()
   await mongoose.connect(mongoUri, {
     serverSelectionTimeoutMS: 5000, // timeout after 5 seconds of inactivity during server selection

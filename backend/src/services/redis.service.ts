@@ -24,10 +24,10 @@ redServ.redfindBy = async (find_expression: string) => {
 redServ.redSetEx = async (
   create_expression: string,
   time: number,
-  data: string | object
+  data: object
 ) => {
   const client = await redclient
-  await client.setEx(create_expression, time, data)
+  await client.setEx(create_expression, time, JSON.stringify(data))
 }
 
 redServ.redDel = async (delete_expression: string) => {

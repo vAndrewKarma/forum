@@ -74,17 +74,26 @@ usersController.newz_Location = async (
 ) => {
   try {
     const data = JSON.parse(JSON.stringify(validateNewLocation(req.body)))
+
     const token = sanitize(data.token)
+
     const uid = sanitize(data.uid)
-    const rez = await redServ.redfindBy(`new_location: ${token}`)
+
+    const rez = JSON.parse(await redServ.redfindBy(`new_location: ${token}`))
+
     if (rez == null || rez !== uid) throw new CredentialsError('Invalid link')
+
     await redServ.redDel(`new_location: ${token}`)
+
     const user = await UserMethods.findUserBy('_id', uid)
+
     if (!user) throw new CredentialsError('Invalid link')
 
     if (!user.ip.includes(req.socket.remoteAddress)) {
       user.ip.push(req.socket.remoteAddress)
+
       await UserMethods.saveUser(user)
+
       return res.json({ succes: true, message: 'Location updated' })
     }
 

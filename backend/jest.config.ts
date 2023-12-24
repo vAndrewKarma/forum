@@ -13,7 +13,7 @@ export default {
   preset: 'ts-jest',
   testEnvironment: 'node',
   testEnvironmentOptions: {
-    NODE_ENV: 'test',
+    NODE_ENV: 'tests',
   },
   coveragePathIgnorePatterns: ['node_modules', 'src/config', 'tests'],
   coverageReporters: ['text', 'lcov', 'clover', 'html'],

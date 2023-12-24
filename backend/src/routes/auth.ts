@@ -12,7 +12,7 @@ router.post(
   endpoint.auth.login.controller
 )
 
-router.get(
+router.post(
   endpoint.auth.check_auth.route,
   protected_route({
     authenthication_route: false,
@@ -20,6 +20,6 @@ router.get(
   endpoint.auth.check_auth.controller
 )
 // Logout route
-router.get(endpoint.auth.logout.route, endpoint.auth.logout.controller)
+router.post(endpoint.auth.logout.route, endpoint.auth.logout.controller)
 
 export { router as AuthRoutes }

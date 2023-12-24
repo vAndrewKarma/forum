@@ -8,6 +8,7 @@ import * as redis from 'redis'
 let app: Application
 
 let client
+
 beforeAll(async () => {
   app = await ExpressInit()
   await mongoose.connect(config.tests.db, {
@@ -18,6 +19,13 @@ beforeAll(async () => {
     url: config.tests.cache,
   })
   await client.connect().catch(console.error)
+  await client.keys('*', (err, rows) => {
+    console.debug(rows)
+    rows.forEach((row) => {
+      console.debug(row)
+      client.del(row)
+    })
+  })
 })
 
 beforeAll(async () => {

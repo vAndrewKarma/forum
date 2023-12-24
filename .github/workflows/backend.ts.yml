@@ -37,10 +37,10 @@ jobs:
 
       - name: Use Variables in a Step
         run: |
-          echo "My variable is  ${{ vars.DB_URI_TESTS }}"
-          echo "Another variable is ${{ vars.TESTS_CACHE_URL }}"
+          echo "My variable is  ${{ env.DB_URI_TESTS }}"
+          echo "Another variable is ${{ env.TESTS_CACHE_URL }}"
       - run: npm run ready --if-present
       - run: npm run test:ci
         env:
-          DB_URI_TESTS: ${{ vars.DB_URI_TESTS }}
-          TESTS_CACHE_URL: ${{ vars.TESTS_CACHE_URL }}
+          DB_URI_TESTS: ${{ env.DB_URI_TESTS }}
+          TESTS_CACHE_URL: ${{ env.TESTS_CACHE_URL }}

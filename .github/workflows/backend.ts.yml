@@ -41,8 +41,7 @@ jobs:
           echo TESTS_CACHE_URL=$ENV_VAR_1 >> .env
           echo DB_URI_TESTS=$ENV_VAR_2 >> .env
           ls -a
-          cat .env
-          npm run test:ci
+
         env:
           ENV_VAR_1: ${{ vars.TESTS_CACHE_URL }}
           ENV_VAR_2: ${{ vars.DB_URI_TESTS }}

@@ -38,8 +38,14 @@ jobs:
       - name: Create env file
         run: |
           touch .env
-          echo TESTS_CACHE_URL=${{ vars.TESTS_CACHE_URL }} >> .env
+          echo TESTS_CACHE_URL=${{ vars.TESTS_CACHE_URL }} 
           echo DB_URI_TESTS=${{ vars.DB_URI_TESTS }} >> .env
+          echo"cat .env"
+          cat.env
+          ls -a .
+          echo "ls -a ${{ github.workspace }}"
+          ls -a ${{ github.workspace }}
+        shell: bash
 
       - run: npm run ready --if-present
       - run: npm run test:ci

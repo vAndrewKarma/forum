@@ -12,8 +12,8 @@ on:
 jobs:
   build:
     env:
-      DB_URI_TESTS: ${{ secrets.DB_URI_TESTS }}
-      TESTS_CACHE_URL: ${{ secrets.TESTS_CACHE_URL }}
+      DB_URI_TESTS: ${{ github.DB_URI_TESTS }}
+      TESTS_CACHE_URL: ${{ github.TESTS_CACHE_URL }}
     runs-on: ubuntu-latest
     defaults:
       run:

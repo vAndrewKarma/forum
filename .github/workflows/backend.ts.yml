@@ -35,13 +35,17 @@ jobs:
 
       - run: npm i
 
-      - name: Create env file
+      - name: Create .env with Github Secrets and run script
         run: |
           touch .env
-          echo TESTS_CACHE_URL=${{ vars.TESTS_CACHE_URL }} >> .env
-          echo DB_URI_TESTS=${{ vars.DB_URI_TESTS }} >> .env
-          npm run test:ci
-
-        shell: bash
-
+          echo ENV_VAR_1=$ENV_VAR_1 >> .env
+          echo ENV_VAR_2=$ENV_VAR_2 >> .env
+          npm run script-that-accesses-env-vars
+        env:
+          ENV_VAR_1: ${{ vars.TESTS_CACHE_URL }}
+          ENV_VAR_2: ${{ vars.DB_URI_TESTS }}
+      - name: Use Variables in a Step
+        run: |
+          cat .env # Display the content of the created .env file
       - run: npm run ready --if-present
+      - run: npm run test:ci

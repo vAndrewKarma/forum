@@ -22,6 +22,15 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          cache: yarn
+          node-version: ${{ matrix.node-version }}
+          cache-dependency-path: ./backend/package-lock.json
+
+      - run: yarn install
+
       - name: Create .env with Github Secrets and run script
         run: |
           touch .env
@@ -33,17 +42,4 @@ jobs:
           ENV_VAR_1: ${{ secrets.REDIS_URL }}
           ENV_VAR_2: ${{ secrets.TESTS_CACHE_URL }}
           ENV_VAR_3: ${{secrets.DB_URI_TESTS}}
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          cache: yarn
-          node-version: ${{ matrix.node-version }}
-          cache-dependency-path: ./backend/package-lock.json
-
-      - run: yarn install
-
-      - name: Generate Coverage
-        run: yarn test
       - run: npm run ready --if-present
-      - name: Generate Coverage
-        run: yarn test

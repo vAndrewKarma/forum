@@ -38,8 +38,8 @@ jobs:
       - name: Create .env with Github Secrets and run script
         run: |
           touch .env
-          echo ENV_VAR_1=$ENV_VAR_1 >> .env
-          echo ENV_VAR_2=$ENV_VAR_2 >> .env
+          echo TESTS_CACHE_URL=$ENV_VAR_1 >> .env
+          echo DB_URI_TESTS=$ENV_VAR_2 >> .env
           npm run test:ci
         env:
           ENV_VAR_1: ${{ vars.TESTS_CACHE_URL }}

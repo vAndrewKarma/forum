@@ -33,7 +33,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache-dependency-path: ./backend/package-lock.json
 
-      - run: yarn i
+      - run: yarn install
 
       - name: Create .env with Github Secrets and run script
         run: |
@@ -48,4 +48,4 @@ jobs:
       - name: Use Variables in a Step
         run: |
           cat .env # Display the content of the created .env file
-      - run: yarn  ready --if-present
+      - run: yarn run ready --if-present

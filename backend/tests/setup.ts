@@ -1,10 +1,12 @@
 import { beforeAll } from '@jest/globals'
+
 import ExpressInit from '../src/lib/express'
 import { Application } from 'express'
 import mongoose from 'mongoose'
 import config from '../src/config'
 import * as redis from 'redis'
 let app: Application
+
 let client
 beforeAll(async () => {
   app = await ExpressInit()

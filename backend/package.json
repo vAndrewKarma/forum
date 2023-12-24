@@ -5,8 +5,8 @@
   "scripts": {
     "start": "node dist/index.js",
     "dev": "nodemon -L --watch . --polling",
-    "test": "jest --watchAll",
-    "test:ci": "jest",
+    "test:watch": "jest --watchAll",
+    "test": "jest",
     "prettier": "prettier --check **/*.js",
     "lint": "eslint --ignore-path .gitignore --ext .js,.ts,.tsx .",
     "build": "tsc -p tsconfig.json",

@@ -35,9 +35,12 @@ jobs:
 
       - run: yarn install
 
-      - name: Run Tests (JEST)
-        run: yarn test:ci --ci --silent --testPathIgnorePatterns=experimental
+      - name: Generate Coverage
+
         env:
-          TESTS_CACHE_URL: ${{ vars.TESTS_CACHE_URL }}
-          DB_URI_TESTS: ${{ vars.DB_URI_TESTS }}
+          DB_URI_TESTS: ${{ secrets.DB_URI_TESTS }}
+
+          TESTS_CACHE_URL: ${{ secrets.TESTS_CACHE_URL }}
+
+        run: yarn test
       - run: npm run ready --if-present

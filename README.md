@@ -9,4 +9,5 @@ add reset password.
 change tests and add db to them
 
 add more tests
-configure for github
+
+<!-- configure for github -->

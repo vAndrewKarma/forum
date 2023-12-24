@@ -7,15 +7,11 @@ services:
       target: development
     ports:
       - '4000:4000'
+    env_file: ../backend/.env
     environment:
       - NODE_ENV=development
-      - MONGO_URI=mongodb://root:example@mongo:27017/forum?authSource=admin
       - REDIS_URL=redis://redis:6379
-      - SESSION_SECRET=dsadsadsadsa
-      - EMAIL_USER=lia17@ethereal.email
-      - PASSWORD_USER=GAwJvDYNu1wNhXHAJQ
-      - MAIL_SERVICE=smtp.ethereal.email
-      - MAIL_PORT=587
+      - MONGO_URI=mongodb://root:example@mongo:27017/forum?authSource=admin
     depends_on:
       - mongo
       - redis

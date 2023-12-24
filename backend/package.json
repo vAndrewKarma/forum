@@ -51,6 +51,7 @@
     "typescript": "^5.2.2"
   },
   "dependencies": {
+    "@typescript-eslint/parser": "^6.15.0",
     "bcrypt": "^5.1.1",
     "compression": "^1.7.4",
     "connect-redis": "^7.1.0",

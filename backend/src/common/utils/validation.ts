@@ -67,5 +67,5 @@ export const validateResetPassword = (user: z.infer<typeof ResetPassword>) =>
 export const validateLogin = (user: z.infer<typeof LoginUser>) =>
   LoginUser.parse(user)
 
-export const validateNewLocation = (new_loc: z.infer<typeof NEW_location>) =>
+export const validateTokenUid = (new_loc: z.infer<typeof NEW_location>) =>
   NEW_location.parse(new_loc)

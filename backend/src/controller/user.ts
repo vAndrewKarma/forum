@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express'
 import BadRequest from '../common/errors/custom/BadRequest'
 import sanitize from '../common/utils/mongo-sanitize'
 import {
-  validateNewLocation,
+  validateTokenUid,
   validateRegister,
   validateResetPassword,
 } from '../common/utils/validation'
@@ -18,11 +18,17 @@ type TuserController = {
   Signup: (req: Request, res: Response, next: NextFunction) => void
   newz_Location: (req: Request, res: Response, next: NextFunction) => void
   reset_password: (req: Request, res: Response, next: NextFunction) => void
+  check_link_password_reset: (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => void
 }
 export const usersController: TuserController = {
   Signup: undefined,
   newz_Location: undefined,
   reset_password: undefined,
+  check_link_password_reset: undefined,
 }
 
 usersController.Signup = async (
@@ -77,7 +83,7 @@ usersController.newz_Location = async (
   next: NextFunction
 ) => {
   try {
-    const data = JSON.parse(JSON.stringify(validateNewLocation(req.body)))
+    const data = JSON.parse(JSON.stringify(validateTokenUid(req.body)))
 
     const token = sanitize(data.token)
 
@@ -116,10 +122,40 @@ usersController.reset_password = async (
     const data = JSON.parse(JSON.stringify(validateResetPassword(req.body)))
 
     const email = sanitize(data.email)
+
     const user = await UserMethods.findUserBy('email', email)
+
     if (!user) throw new CredentialsError('Email not found')
+
     await EmailServ.NewPassword(email, user._id)
+
     return res.json({ message: 'Verify your email' })
+  } catch (err) {
+    return next(err)
+  }
+}
+
+usersController.check_link_password_reset = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const data = JSON.parse(JSON.stringify(validateTokenUid(req.body)))
+
+    const token = sanitize(data.token)
+
+    const uid = sanitize(data.uid)
+
+    const rez = JSON.parse(await redServ.redfindBy(`reset_password: ${token}`))
+
+    if (rez == null || rez !== uid) throw new CredentialsError('Invalid link')
+
+    const user = await UserMethods.findUserBy('_id', uid)
+
+    if (!user) throw new CredentialsError('Invalid link')
+
+    return res.json({ message: 'Good link' })
   } catch (err) {
     return next(err)
   }

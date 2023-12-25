@@ -14,3 +14,5 @@ add reset password.
 <!-- configure for github -->
 
 <!-- checked email transporter works -->
+
+when password resetted logout user

@@ -21,4 +21,8 @@ router.post(
   endpoint.user.reset_password.route,
   endpoint.user.reset_password.controller
 )
+router.post(
+  endpoint.user.check_link_password_reset.route,
+  endpoint.user.check_link_password_reset.controller
+)
 export { router as UserRoutes }

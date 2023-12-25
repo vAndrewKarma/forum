@@ -5,9 +5,11 @@ import { tokenServ } from './tokens.service'
 
 type TEmailServ = {
   NewLocation: (email: string, uid: string) => Promise<void>
+  NewPassword: (email: string, uid: string) => Promise<void>
 }
 export const EmailServ: TEmailServ = {
   NewLocation: undefined,
+  NewPassword: undefined,
 }
 
 EmailServ.NewLocation = async (email: string, uid: string) => {
@@ -18,6 +20,26 @@ EmailServ.NewLocation = async (email: string, uid: string) => {
     to: email,
     subject: 'New location',
     text: `Seems like you moved to a new location. Please click the next link to confirm it: ${config.client}/new-location?=${uid}+${token}`,
+  }
+
+  // Send email
+  await transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      logger.error(error)
+    } else {
+      logger.debug('Email sent:', info.response)
+    }
+  })
+}
+
+EmailServ.NewPassword = async (email: string, uid: string) => {
+  const token = await tokenServ.genTokenForResetPassword(uid)
+
+  const mailOptions = {
+    from: config.app.email_user,
+    to: email,
+    subject: 'New Password',
+    text: `Seems like you request a new password. Please click the next link to confirm it: ${config.client}/new-password?=${uid}+${token}`,
   }
 
   // Send email

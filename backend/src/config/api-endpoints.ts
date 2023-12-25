@@ -30,6 +30,14 @@ const endpoint: ApiEndpoints = {
       route: '/register',
       controller: usersController.Signup,
     },
+    new_location: {
+      route: '/new_location',
+      controller: usersController.newz_Location,
+    },
+    reset_password: {
+      route: '/reset_password',
+      controller: usersController.reset_password,
+    },
   },
   auth: {
     login: {
@@ -46,11 +54,6 @@ const endpoint: ApiEndpoints = {
         res
           .status(201)
           .json({ data: { loggedIn: true, message: 'User logged in' } }),
-    },
-
-    new_location: {
-      route: '/new_location',
-      controller: usersController.newz_Location,
     },
   },
 }

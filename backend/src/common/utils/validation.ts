@@ -16,7 +16,10 @@ export const RegisterUser = z
       .regex(/[!@#$%^&*]/, 'Password must contain at least 1 symbol')
       .max(16, 'Password can be maximum 16 characters'),
     confirm_password: z.string(),
-    email: z.string().email().max(40, 'Email can be maximum 40 characters'),
+    email: z
+      .string()
+      .email('Invalid email')
+      .max(40, 'Email can be maximum 40 characters'),
     gender: z.enum(['Not Specified', 'Male', 'Female']).optional(),
     firstName: z.string().optional(),
     lastName: z.string().optional(),
@@ -26,7 +29,7 @@ export const RegisterUser = z
   })
 
 export const LoginUser = z.object({
-  email: z.string().email().max(40, 'Email can be maximum 40 characters'),
+  email: z.string().email('Email not found').max(40, 'Invalid credentials'),
   password: z
     .string()
     .min(8, 'Invalid credentials')
@@ -34,6 +37,9 @@ export const LoginUser = z.object({
     .regex(/[0-9]/, 'Invalid credentials')
     .regex(/[!@#$%^&*]/, 'Invalid credentials')
     .max(16, 'Invalid credentials'),
+})
+export const ResetPassword = z.object({
+  email: z.string().email('Email not found').max(40, 'Email not found'),
 })
 
 const NEW_location = z.object({
@@ -54,6 +60,9 @@ const NEW_location = z.object({
 export type UserType = z.infer<typeof RegisterUser>
 
 export const validateRegister = (user: UserType) => RegisterUser.parse(user)
+
+export const validateResetPassword = (user: z.infer<typeof ResetPassword>) =>
+  ResetPassword.parse(user)
 
 export const validateLogin = (user: z.infer<typeof LoginUser>) =>
   LoginUser.parse(user)

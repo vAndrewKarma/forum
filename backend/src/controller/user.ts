@@ -4,6 +4,7 @@ import sanitize from '../common/utils/mongo-sanitize'
 import {
   validateNewLocation,
   validateRegister,
+  validateResetPassword,
 } from '../common/utils/validation'
 
 import { UserDocument } from '../models/user'
@@ -11,14 +12,17 @@ import { UserMethods } from '../services/user.service'
 import { logger } from '../common/utils/logger'
 import { redServ } from '../services/redis.service'
 import CredentialsError from '../common/errors/custom/CredentialsError'
+import { EmailServ } from '../services/mail.service'
 
 type TuserController = {
   Signup: (req: Request, res: Response, next: NextFunction) => void
   newz_Location: (req: Request, res: Response, next: NextFunction) => void
+  reset_password: (req: Request, res: Response, next: NextFunction) => void
 }
 export const usersController: TuserController = {
   Signup: undefined,
   newz_Location: undefined,
+  reset_password: undefined,
 }
 
 usersController.Signup = async (
@@ -98,6 +102,24 @@ usersController.newz_Location = async (
     }
 
     return res.json({ succes: true, message: 'Location already updated' })
+  } catch (err) {
+    return next(err)
+  }
+}
+
+usersController.reset_password = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const data = JSON.parse(JSON.stringify(validateResetPassword(req.body)))
+
+    const email = sanitize(data.email)
+    const user = await UserMethods.findUserBy('email', email)
+    if (!user) throw new CredentialsError('Email not found')
+    await EmailServ.NewPassword(email, user._id)
+    return res.json({ message: 'Verify your email' })
   } catch (err) {
     return next(err)
   }

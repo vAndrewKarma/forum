@@ -14,7 +14,11 @@ router.post(
 )
 
 router.post(
-  endpoint.auth.new_location.route,
-  endpoint.auth.new_location.controller
+  endpoint.user.new_location.route,
+  endpoint.user.new_location.controller
+)
+router.post(
+  endpoint.user.reset_password.route,
+  endpoint.user.reset_password.controller
 )
 export { router as UserRoutes }

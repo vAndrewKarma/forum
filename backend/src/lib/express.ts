@@ -14,6 +14,7 @@ import { StatusRoute } from '../routes/status'
 import { AuthRoutes } from '../routes/auth'
 import Notfound from '../common/errors/custom/notfound'
 import limiter from '../common/utils/rate-limitter'
+import csrf from 'csurf'
 
 export default async function ExpressInit(): Promise<Application> {
   const app: Application = express()
@@ -27,7 +28,7 @@ export default async function ExpressInit(): Promise<Application> {
 
   const { sconfig } = await Get_Session_Details()
   app.use(session(sconfig))
-
+  app.use(csrf)
   app.use(passport.initialize())
   app.use(passport.session())
   app.use(limiter) // remove in production and use reverse proxy instead like HAproxy. also app limiters inside business logic do not work well in clusters

@@ -11,8 +11,8 @@ const user = Math.random().toString(36).slice(2, 13)
 beforeAll(async () => {
   app = await ExpressInit()
   await mongoose.connect(config.tests.db, {
-    socketTimeoutMS: 15000, // close sockets after 45 seconds of inactivity
-    family: 4, // use IPv4, skip trying IPv6
+    socketTimeoutMS: 15000,
+    family: 4,
   })
   client = redis.createClient({
     url: config.tests.cache,

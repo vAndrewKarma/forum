@@ -4,7 +4,6 @@ import protected_route from '../common/utils/protected_route'
 import endpoint from '../config/api-endpoints'
 const router = Router()
 
-// Register route
 router.post(
   endpoint.user.register.route,
   protected_route({

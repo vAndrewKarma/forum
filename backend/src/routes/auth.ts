@@ -3,7 +3,6 @@ import protected_route from '../common/utils/protected_route'
 import endpoint from '../config/api-endpoints'
 const router = Router()
 
-// Login route
 router.post(
   endpoint.auth.login.route,
   protected_route({
@@ -19,7 +18,6 @@ router.post(
   }),
   endpoint.auth.check_auth.controller
 )
-// Logout route
 router.post(endpoint.auth.logout.route, endpoint.auth.logout.controller)
 
 export { router as AuthRoutes }

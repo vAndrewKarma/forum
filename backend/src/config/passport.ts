@@ -24,7 +24,6 @@ passport.use(
   ) {
     let user: UserDocument
     logger.debug(email)
-    // 1. Check if the user is found
     try {
       const data = JSON.parse(
         JSON.stringify(validateLogin({ email: email, password: password }))
@@ -37,7 +36,6 @@ passport.use(
     } catch (e) {
       return done(e)
     }
-    // 2. Check if password matches
     try {
       const data = JSON.parse(
         JSON.stringify(validateLogin({ email: email, password: password }))

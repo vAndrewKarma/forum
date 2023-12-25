@@ -1,3 +1,4 @@
+import { logger } from '../common/utils/logger'
 import config from '../config'
 import transporter from '../config/nodemailer'
 import { tokenServ } from './tokens.service'
@@ -11,7 +12,7 @@ export const EmailServ: TEmailServ = {
 
 EmailServ.NewLocation = async (email: string, uid: string) => {
   const token = await tokenServ.genTokenForNewLocation(uid)
-  console.log('problem3')
+
   const mailOptions = {
     from: config.app.email_user,
     to: email,
@@ -22,10 +23,9 @@ EmailServ.NewLocation = async (email: string, uid: string) => {
   // Send email
   await transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
-      console.error('Error sending email:', error)
+      logger.error(error)
     } else {
-      console.log('Email sent:', info.response)
+      logger.debug('Email sent:', info.response)
     }
   })
-  console.log('problem4')
 }

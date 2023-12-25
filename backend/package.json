@@ -48,7 +48,6 @@
     "nodemon": "^3.0.1",
     "prettier": "^3.1.0",
     "supertest": "^6.3.3",
-    "supertest-session": "^5.0.1",
     "ts-node": "^10.9.1",
     "typescript": "^5.2.2"
   },

@@ -57,6 +57,33 @@ const NEW_location = z.object({
     .toLowerCase(),
 })
 
+const new_password = z
+  .object({
+    uid: z
+      .string()
+      .min(10, 'Invalid link')
+      .max(60, 'Invalid link')
+      .toLowerCase()
+      .regex(/^[a-zA-Z0-9]+$/, 'Invalid link'),
+    token: z
+      .string()
+      .min(10, 'Invalid link')
+      .max(60, 'Invalid link')
+      .regex(/^[a-zA-Z0-9]+$/, 'Invalid link')
+      .toLowerCase(),
+    password: z
+      .string()
+      .min(8, 'Password needs to be minimum 8 characters')
+      .regex(/[A-Z]/, 'Password must contain at least 1 capital letter')
+      .regex(/[0-9]/, 'Password must contain at least 1 number')
+      .regex(/[!@#$%^&*]/, 'Password must contain at least 1 symbol')
+      .max(16, 'Password can be maximum 16 characters'),
+    confirm_password: z.string(),
+  })
+  .refine((data) => data.password === data.confirm_password, {
+    message: 'Passwords do not match',
+  })
+
 export type UserType = z.infer<typeof RegisterUser>
 
 export const validateRegister = (user: UserType) => RegisterUser.parse(user)
@@ -69,3 +96,7 @@ export const validateLogin = (user: z.infer<typeof LoginUser>) =>
 
 export const validateTokenUid = (new_loc: z.infer<typeof NEW_location>) =>
   NEW_location.parse(new_loc)
+
+export const validateNewPasswordReset = (
+  pswd_body: z.infer<typeof new_password>
+) => new_password.parse(pswd_body)

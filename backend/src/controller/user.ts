@@ -5,9 +5,10 @@ import {
   validateTokenUid,
   validateRegister,
   validateResetPassword,
+  validateNewPasswordReset,
 } from '../common/utils/validation'
 
-import { UserDocument } from '../models/user'
+import { User, UserDocument } from '../models/user'
 import { UserMethods } from '../services/user.service'
 import { logger } from '../common/utils/logger'
 import { redServ } from '../services/redis.service'
@@ -23,12 +24,14 @@ type TuserController = {
     res: Response,
     next: NextFunction
   ) => void
+  new_password: (req: Request, res: Response, next: NextFunction) => void
 }
 export const usersController: TuserController = {
   Signup: undefined,
   newz_Location: undefined,
   reset_password: undefined,
   check_link_password_reset: undefined,
+  new_password: undefined,
 }
 
 usersController.Signup = async (
@@ -141,6 +144,16 @@ usersController.check_link_password_reset = async (
   next: NextFunction
 ) => {
   try {
+    req.logout(() => {
+      logger.debug('Logged out')
+    })
+    if (req.session.user) {
+      res.clearCookie('user_sid')
+      req.session.destroy(function (err) {
+        if (err) logger.error(err)
+      })
+    }
+
     const data = JSON.parse(JSON.stringify(validateTokenUid(req.body)))
 
     const token = sanitize(data.token)
@@ -156,6 +169,53 @@ usersController.check_link_password_reset = async (
     if (!user) throw new CredentialsError('Invalid link')
 
     return res.json({ message: 'Good link' })
+  } catch (err) {
+    return next(err)
+  }
+}
+
+usersController.new_password = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    req.logout(() => {
+      logger.debug('Logged out')
+    })
+    if (req.session.user) {
+      res.clearCookie('user_sid')
+      req.session.destroy(function (err) {
+        if (err) logger.error(err)
+      })
+    }
+
+    const data = JSON.parse(JSON.stringify(validateNewPasswordReset(req.body)))
+
+    const token = sanitize(data.token)
+    const password = sanitize(data.password)
+    const uid = sanitize(data.uid)
+
+    const rez = JSON.parse(await redServ.redfindBy(`reset_password: ${token}`))
+
+    if (rez == null || rez !== uid) throw new CredentialsError('Invalid link')
+
+    const user = await UserMethods.findUserBy('_id', uid)
+
+    if (!user) throw new CredentialsError('Invalid link')
+
+    const match = await User.comparePassword(password, user.password)
+    if (match)
+      throw new CredentialsError(
+        'The new password cannot be the same as the current one'
+      )
+
+    await redServ.redDel(`reset_password: ${token}`)
+
+    user.password = password
+    await UserMethods.saveUser(user)
+
+    return res.json({ message: 'worked', succes: true })
   } catch (err) {
     return next(err)
   }

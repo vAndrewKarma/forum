@@ -42,6 +42,10 @@ const endpoint: ApiEndpoints = {
       route: '/check_link_password_reset',
       controller: usersController.check_link_password_reset,
     },
+    new_password: {
+      route: '/new_password',
+      controller: usersController.new_password,
+    },
   },
   auth: {
     login: {

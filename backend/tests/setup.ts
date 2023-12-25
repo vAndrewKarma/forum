@@ -1,4 +1,4 @@
-import { beforeAll } from '@jest/globals'
+import { afterAll, beforeAll } from '@jest/globals'
 import ExpressInit from '../src/lib/express'
 import { Application } from 'express'
 import mongoose from 'mongoose'
@@ -18,7 +18,9 @@ beforeAll(async () => {
     url: config.tests.cache,
   })
   await client.connect().catch(console.error)
-  await client.disconnect()
 })
-
+afterAll(async () => {
+  await client.quit()
+  await mongoose.disconnect()
+})
 export { app, user }

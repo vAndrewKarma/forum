@@ -4,6 +4,7 @@ import { Application } from 'express'
 import mongoose from 'mongoose'
 import config from '../src/config'
 import * as redis from 'redis'
+import { logger } from '../src/common/utils/logger'
 let app: Application
 
 let client
@@ -21,7 +22,7 @@ beforeAll(async () => {
       maxWaitingClients: 10000,
     },
   })
-  await client.connect().catch(console.error)
+  await client.connect().catch(logger.error)
 })
 afterAll(async () => {
   await client.quit()

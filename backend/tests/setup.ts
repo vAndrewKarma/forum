@@ -16,6 +16,10 @@ beforeAll(async () => {
   })
   client = redis.createClient({
     url: config.tests.cache,
+    isolationPoolOptions: {
+      max: 10000,
+      maxWaitingClients: 10000,
+    },
   })
   await client.connect().catch(console.error)
 })

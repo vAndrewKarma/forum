@@ -23,9 +23,9 @@ beforeAll(async () => {
     },
   })
   await client.connect().catch(logger.error)
+  await client.quit()
 })
 afterAll(async () => {
-  await client.quit()
   await mongoose.disconnect()
 })
 export { app, user }

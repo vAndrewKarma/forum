@@ -14,20 +14,26 @@ import { StatusRoute } from '../routes/status'
 import { AuthRoutes } from '../routes/auth'
 import Notfound from '../common/errors/custom/notfound'
 import limiter from '../common/utils/rate-limitter'
+import csfrProtection from '../common/utils/csrf'
+import { generatecsfr } from '../common/middleware/generatecsfr'
 
 export default async function ExpressInit(): Promise<Application> {
   const app: Application = express()
   app.set('port', config.app.port)
+  app.set('view engine', 'ejs')
+  app.use(express.static('public'))
   app.use(express.json({ limit: '50kb' })) //  used for handling encoded json data
   app.use(express.urlencoded({ extended: false, limit: '50kb' })) // used for handling url encoded form data like name=Example+Test&age=20
   app.use(express.raw({ limit: '50kb' }))
-  if (config.NODE_ENV === 'production')
-    app.set('trust proxy', 1), app.use(compression)
+  if (config.NODE_ENV === 'production' || config.NODE_ENV === 'development')
+    app.set('trust proxy', 1),
+      app.use(compression),
+      app.use(csfrProtection),
+      app.use(generatecsfr)
   else app.use(compression({ level: 3 }))
 
   const { sconfig } = await Get_Session_Details()
   app.use(session(sconfig))
-
   app.use(passport.initialize())
   app.use(passport.session())
   app.use(limiter) // remove in production and use reverse proxy instead like HAproxy. also app limiters inside business logic do not work well in clusters
@@ -39,7 +45,12 @@ export default async function ExpressInit(): Promise<Application> {
   // i will try using _variable-name  for unused variables
 
   //ROUTES
-
+  app.get('/', (req: Request, res: Response, _next: NextFunction) => {
+    res.render('index', { csrfToken: req.csrfToken() })
+  })
+  app.post('/submit', (req, res) => {
+    res.send('Form submitted successfully!')
+  })
   app.use(StatusRoute)
   app.use(UserRoutes)
   app.use(AuthRoutes)

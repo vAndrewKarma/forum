@@ -1,0 +1,15 @@
+<!-- views/index.ejs -->
+<html>
+  <head>
+    <%- include("includes/header") %>
+    <title>EJS Test</title>
+  </head>
+  <body>
+    <h1>CSRF Example Form</h1>
+    <form method="post" action="/submit">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+      <!-- Other form fields go here -->
+      <input type="submit" value="Submit" />
+    </form>
+  </body>
+</html>

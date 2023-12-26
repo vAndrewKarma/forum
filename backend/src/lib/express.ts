@@ -20,8 +20,6 @@ import { generatecsfr } from '../common/middleware/generatecsfr'
 export default async function ExpressInit(): Promise<Application> {
   const app: Application = express()
   app.set('port', config.app.port)
-  app.set('view engine', 'ejs')
-  app.use(express.static('public'))
   app.use(express.json({ limit: '50kb' })) //  used for handling encoded json data
   app.use(express.urlencoded({ extended: false, limit: '50kb' })) // used for handling url encoded form data like name=Example+Test&age=20
   app.use(express.raw({ limit: '50kb' }))
@@ -45,12 +43,6 @@ export default async function ExpressInit(): Promise<Application> {
   // i will try using _variable-name  for unused variables
 
   //ROUTES
-  app.get('/', (req: Request, res: Response, _next: NextFunction) => {
-    res.render('index', { csrfToken: req.csrfToken() })
-  })
-  app.post('/submit', (req, res) => {
-    res.send('Form submitted successfully!')
-  })
   app.use(StatusRoute)
   app.use(UserRoutes)
   app.use(AuthRoutes)

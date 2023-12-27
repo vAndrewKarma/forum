@@ -20,6 +20,17 @@ services:
       - ../backend:/backend
       - /backend/node_modules
     command: npm run dev
+  app:
+    build:
+      context: ../frontend
+      dockerfile: ../frontend/Dockerfile
+    volumes:
+      - ../:/frontend
+    ports:
+      - '3000:3000'
+    image: frontend:latest
+    container_name: frontend_container
+    command: npm start
 
   mongo:
     image: mongo:latest

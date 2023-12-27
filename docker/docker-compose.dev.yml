@@ -20,17 +20,21 @@ services:
       - ../backend:/backend
       - /backend/node_modules
     command: npm run dev
-  app:
+
+  nextjs-ui:
     build:
       context: ../frontend
-      dockerfile: ../frontend/Dockerfile
-    volumes:
-      - ../:/frontend
+      target: development
+    environment:
+      - NODE_ENV=development
     ports:
       - '3000:3000'
-    image: frontend:latest
-    container_name: frontend_container
-    command: npm start
+    container_name: nextjs-ui
+    stdin_open: true
+    volumes:
+      - ../frontend:/frontend
+      - /frontend/node_modules
+    command: npm run dev
 
   mongo:
     image: mongo:latest
@@ -47,8 +51,7 @@ services:
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
       ME_CONFIG_MONGODB_ADMINPASSWORD: example
       ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
-    depends_on:
-      - mongo
+
   redis:
     image: redis:latest
     ports:

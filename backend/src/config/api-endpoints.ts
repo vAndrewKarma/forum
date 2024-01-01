@@ -46,6 +46,10 @@ const endpoint: ApiEndpoints = {
       route: '/new_password',
       controller: usersController.new_password,
     },
+    about_me: {
+      route: '/about_me',
+      controller: usersController.about_me,
+    },
   },
   auth: {
     login: {

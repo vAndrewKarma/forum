@@ -5,6 +5,7 @@ import CredentialsError from '../common/errors/custom/CredentialsError'
 import { logger } from '../common/utils/logger'
 import { EmailServ } from '../services/mail.service'
 import sanitize from '../common/utils/mongo-sanitize'
+import { validateLogin } from '../common/utils/validation'
 type TAuthController = {
   Login: (req: Request, res: Response, next: NextFunction) => void
   Logout: (req: Request, res: Response, _next: NextFunction) => void
@@ -20,6 +21,7 @@ AuthController.Login = async (
   next: NextFunction
 ) => {
   try {
+    validateLogin(req.body)
     passport.authenticate(
       'local',
       async function (

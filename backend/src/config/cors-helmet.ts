@@ -27,12 +27,21 @@ export const helmetOptions: HelmetOptions = {
 
 export const corsOptions = {
   exposedHeaders: 'Authorization',
-  allowedHeaders: ['Authorization', 'Content-type', 'Content-Length', 'Origin'],
+  allowedHeaders: [
+    'Authorization',
+    'Content-type',
+    'Content-Length',
+    'Origin',
+    'x-csrf-token',
+  ],
+  preflightContinue: true,
+
   credentials: true,
   origin: [
     `https://${config.client}`,
     `http://${config.client}`,
     `${config.client}`,
+    'http://localhost:5173', //remove
   ],
   methods: ['GET', 'POST', 'PUT', 'OPTIONS', 'DELETE'],
 }

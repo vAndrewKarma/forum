@@ -2,7 +2,10 @@ import { beforeAll, describe, expect, test } from '@jest/globals'
 import request from 'supertest'
 import { User } from '../../src/models/user'
 import { app, user } from '../setup'
+let csrf
 beforeAll(async () => {
+  const token = await request(app).get('/about_me')
+  csrf = token.body.data.csrf
   const data = {
     email: `${user}@gmail.com`,
     password: 'ssszzsA37a!',
@@ -12,6 +15,7 @@ beforeAll(async () => {
     gender: 'Female',
     username: user,
     rememberMe: true,
+    csrf: csrf,
   }
   await request(app).post('/register').send(data)
 })
@@ -23,6 +27,7 @@ describe('Simple login test', () => {
       firstName: 'dsaddzsadsa',
       confirm_password: 'ssszzsA37a!',
       lastName: 'dsaddsadsa',
+      csrf: csrf,
       gender: 'Female',
       username: user,
       rememberMe: true,
@@ -54,6 +59,7 @@ describe('Simple login test', () => {
       gender: 'Female',
       username: user,
       rememberMe: false,
+      csrf: csrf,
     }
 
     const loginRes = await request(app).post('/login').send(loginData)
@@ -79,6 +85,7 @@ describe('Simple login test, user not exists any more...', () => {
       firstName: 'dsaddzsadsa',
       confirm_password: 'ssszzsA37a!',
       lastName: 'dsaddsadsa',
+      csrf: csrf,
       gender: 'Female',
       username: user,
       rememberMe: false,
@@ -102,6 +109,7 @@ describe('Simple login test, user not exists any more...', () => {
       email: `${user}@gmail.com`,
       password: 'ssszzsA37a!',
       firstName: 'dsaddzsadsa',
+      csrf: csrf,
       confirm_password: 'ssszzsA37a!',
       lastName: 'dsaddsadsa',
       gender: 'Female',
@@ -123,6 +131,7 @@ describe('Simple login test', () => {
       lastName: 'dsaddsadsa',
       gender: 'Female',
       username: user,
+      csrf: csrf,
       rememberMe: false,
     }
 
@@ -133,6 +142,7 @@ describe('Simple login test', () => {
     const data = {
       email: `${user}@gmail.com`,
       password: 'ssszzsA37a!',
+      csrf: csrf,
       firstName: 'dsaddzsadsa',
       confirm_password: 'ssszzsA37a!',
       lastName: 'dsaddsadsa',

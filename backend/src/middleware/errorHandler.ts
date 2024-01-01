@@ -4,7 +4,8 @@ import Template from '../common/errors/template'
 import endpoint from '../config/api-endpoints'
 
 export default function errorHandler(
-  err: Error,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  err: any,
   req: Request,
   res: Response,
   next: NextFunction
@@ -17,6 +18,10 @@ export default function errorHandler(
     return res
       .status(err.statusCode)
       .send({ message: `${err.message}`, field: err.field })
+  }
+
+  if (err.code === 'EBADCSRFTOKEN') {
+    return res.status(403).send({ message: 'Forbidden: Invalid CSRF token' })
   }
 
   if (err instanceof ZodError) {

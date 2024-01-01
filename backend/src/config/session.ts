@@ -15,7 +15,6 @@ export default async function Get_Session_Details() {
     saveUninitialized: false,
     resave: false,
     key: 'user_sid',
-    // eslint-disable-next-line no-constant-condition
   }
   if (store !== null && store.data.store && store.data.client) {
     session_config['store'] = store.data.store

@@ -21,15 +21,15 @@ export const RegisterUser = z
       .email('Invalid email')
       .max(40, 'Email can be maximum 40 characters'),
     gender: z.enum(['Not Specified', 'Male', 'Female']).optional(),
-    firstName: z.string().optional(),
-    lastName: z.string().optional(),
+    firstName: z.string(),
+    lastName: z.string(),
   })
   .refine((data) => data.password === data.confirm_password, {
     message: 'Passwords do not match',
   })
 
 export const LoginUser = z.object({
-  email: z.string().email('Email not found').max(40, 'Invalid credentials'),
+  email: z.string().email('Invalid credentials').max(40, 'Invalid credentials'),
   password: z
     .string()
     .min(8, 'Invalid credentials')
@@ -39,7 +39,7 @@ export const LoginUser = z.object({
     .max(16, 'Invalid credentials'),
 })
 export const ResetPassword = z.object({
-  email: z.string().email('Email not found').max(40, 'Email not found'),
+  email: z.string().email('Invalid credentials').max(40, 'Invalid credentials'),
 })
 
 const NEW_location = z.object({

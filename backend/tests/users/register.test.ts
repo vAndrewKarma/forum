@@ -3,8 +3,11 @@ import request from 'supertest'
 import { app, user } from '../setup'
 
 let cookie
+let csrf
 describe('Simple register test', () => {
   test('should return 200', async () => {
+    const token = await request(app).get('/about_me')
+    csrf = token.body.data.csrf
     const data = {
       email: `${user}@gmail.com`,
       password: 'ssszzsA37a!',
@@ -13,6 +16,7 @@ describe('Simple register test', () => {
       lastName: 'dsadsadsa',
       gender: 'Female',
       username: user,
+      csrf: csrf,
     }
     const res = await request(app).post('/register').send(data)
     expect(res.body.data.loggedIn).toBe(true)
@@ -37,6 +41,7 @@ describe('Simple register test', () => {
         lastName: 'dsadsadsa',
         gender: 'Female',
         username: 'kzzdddddddzzzz',
+        csrf: csrf,
       })
 
     const res = await request(app)
@@ -49,6 +54,7 @@ describe('Simple register test', () => {
         lastName: 'dsadsadsa',
         gender: 'Female',
         username: 'kzzdd1ddddzzzzzzzzdzzzz',
+        csrf: csrf,
       })
       .set('Cookie', cookie)
 
@@ -64,6 +70,7 @@ describe('Simple  check passwords register test', () => {
       password: 'ssszzsA37a!',
       firstName: 'dsadzsadsa',
       confirm_password: 'ssszzsddA37a!',
+      csrf: csrf,
       lastName: 'dsadsadsa',
       gender: 'Female',
       username: user,
@@ -78,6 +85,7 @@ describe('Simple password register test', () => {
     const data = {
       email: 'kdaadddzd6ail@gmail.com',
       firstName: 'dsadzsadsa',
+      csrf: csrf,
       confirm_password: 'ssszzsddA37a!',
       lastName: 'dsadsadsa',
       gender: 'Female',
@@ -92,6 +100,7 @@ describe('Simple username register test', () => {
   test('should return 411', async () => {
     const data = {
       email: 'kdaadddzd6ail@gmail.com',
+      csrf: csrf,
       firstName: 'dsadzsadsa',
       confirm_password: 'ssszzsddA37a!',
       lastName: 'dsadsadsa',
@@ -108,6 +117,7 @@ describe('Simple register duplicate username test', () => {
     await request(app).post('/register').send({
       email: 'kdaaddddzd6ail@gmail.com',
       password: 'ssszzsA37a!',
+      csrf: csrf,
       firstName: 'dsadzsadsa',
       confirm_password: 'ssszzsA37a!',
       lastName: 'dsadsadsa',
@@ -120,6 +130,7 @@ describe('Simple register duplicate username test', () => {
       password: 'ssszzsA37a!',
       firstName: 'dsadzsadsa',
       confirm_password: 'ssszzsA37a!',
+      csrf: csrf,
       lastName: 'dsadsadsa',
       gender: 'Female',
       username: user,
@@ -137,6 +148,7 @@ describe('Simple register duplicate email test', () => {
         password: 'ssszzsA37a!',
         firstName: 'dsadzsadsa',
         confirm_password: 'ssszzsA37a!',
+        csrf: csrf,
         lastName: 'dsadsadsa',
         gender: 'Female',
         username: 'ddddzzzzz',
@@ -149,6 +161,7 @@ describe('Simple register duplicate email test', () => {
         password: 'ssszzsA37a!',
         firstName: 'dsadzsadsa',
         confirm_password: 'ssszzsA37a!',
+        csrf: csrf,
         lastName: 'dsadsadsa',
         gender: 'Female',
         username: 'ddddzzzzzzzx',

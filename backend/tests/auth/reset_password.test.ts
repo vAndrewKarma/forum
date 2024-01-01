@@ -1,9 +1,11 @@
 import { describe, expect, test } from '@jest/globals'
 import request from 'supertest'
 import { app, user } from '../setup'
-
+let csrf
 describe('Simple login test', () => {
   test('should return 200 after login', async () => {
+    const token = await request(app).get('/about_me')
+    csrf = token.body.data.csrf
     const data = {
       email: `${user}1@gmail.com`,
       password: 'ssszzsA37a!',
@@ -13,6 +15,7 @@ describe('Simple login test', () => {
       gender: 'Female',
       username: user,
       rememberMe: true,
+      csrf: csrf,
     }
     await request(app).post('/register').send(data)
     const res = await request(app)

@@ -1,10 +1,12 @@
 import { Router } from 'express'
 import protected_route from '../common/utils/protected_route'
 import endpoint from '../config/api-endpoints'
+import { checkCsrf } from '../middleware/checkCsrf'
 const router = Router()
 
 router.post(
   endpoint.auth.login.route,
+  checkCsrf,
   protected_route({
     authenthication_route: true,
   }),

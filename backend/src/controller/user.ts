@@ -14,11 +14,14 @@ import { logger } from '../common/utils/logger'
 import { redServ } from '../services/redis.service'
 import CredentialsError from '../common/errors/custom/CredentialsError'
 import { EmailServ } from '../services/mail.service'
+import { generateCsrf } from '../utils/generateCsrf'
+import BadCookie from '../common/errors/custom/BadCookie'
 
 type TuserController = {
   Signup: (req: Request, res: Response, next: NextFunction) => void
   newz_Location: (req: Request, res: Response, next: NextFunction) => void
   reset_password: (req: Request, res: Response, next: NextFunction) => void
+  about_me: (req: Request, res: Response, next: NextFunction) => void
   check_link_password_reset: (
     req: Request,
     res: Response,
@@ -29,6 +32,7 @@ type TuserController = {
 export const usersController: TuserController = {
   Signup: undefined,
   newz_Location: undefined,
+  about_me: undefined,
   reset_password: undefined,
   check_link_password_reset: undefined,
   new_password: undefined,
@@ -198,7 +202,7 @@ usersController.new_password = async (
 
     const rez = JSON.parse(await redServ.redfindBy(`reset_password: ${token}`))
 
-    if (rez == null || rez !== uid) throw new CredentialsError('Invalid link')
+    if (rez === null || rez !== uid) throw new CredentialsError('Invalid link')
 
     const user = await UserMethods.findUserBy('_id', uid)
 
@@ -216,6 +220,37 @@ usersController.new_password = async (
     await UserMethods.saveUser(user)
 
     return res.json({ message: 'worked', succes: true })
+  } catch (err) {
+    return next(err)
+  }
+}
+
+// route1
+usersController.about_me = async (req, res, next) => {
+  try {
+    const token = await generateCsrf(req, res, next)
+    if (req.isAuthenticated()) {
+      if (!req.session.passport.user.ip.includes(req.socket.remoteAddress)) {
+        logger.debug('ip s do not match')
+        throw new BadCookie('Bad cookie') // if user authenthicated and ip s do not match with the one inside of the coookie delete cookie
+      }
+      return res.json({
+        data: {
+          loggedIn: true,
+          message: 'User loggedIn',
+          csrf: token,
+          user: req.session.passport.user,
+        },
+      })
+    }
+    if (!req.isAuthenticated())
+      return res.json({
+        data: {
+          loggedIn: false,
+          message: 'User not loggedIn',
+          csrf: token,
+        },
+      })
   } catch (err) {
     return next(err)
   }

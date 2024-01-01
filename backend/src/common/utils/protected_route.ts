@@ -21,7 +21,7 @@ export default function protected_route(info: {
       }
     } else {
       if (!req.isAuthenticated())
-        return res.status(401).json({
+        return res.json({
           data: {
             loggedIn: false,
             message: 'User not loggedIn',

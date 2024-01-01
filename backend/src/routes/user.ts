@@ -2,6 +2,7 @@ import { Router } from 'express'
 
 import protected_route from '../common/utils/protected_route'
 import endpoint from '../config/api-endpoints'
+import { checkCsrf } from '../middleware/checkCsrf'
 const router = Router()
 
 router.post(
@@ -9,6 +10,7 @@ router.post(
   protected_route({
     authenthication_route: true,
   }),
+  checkCsrf,
   endpoint.user.register.controller
 )
 
@@ -28,4 +30,5 @@ router.post(
   endpoint.user.new_password.route,
   endpoint.user.new_password.controller
 )
+router.get(endpoint.user.about_me.route, endpoint.user.about_me.controller)
 export { router as UserRoutes }

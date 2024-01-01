@@ -13,10 +13,6 @@ import { UserRoutes } from '../routes/user'
 import { StatusRoute } from '../routes/status'
 import { AuthRoutes } from '../routes/auth'
 import Notfound from '../common/errors/custom/notfound'
-import limiter from '../common/utils/rate-limitter'
-import csfrProtection from '../common/utils/csrf'
-import { generatecsfr } from '../common/middleware/generatecsfr'
-
 export default async function ExpressInit(): Promise<Application> {
   const app: Application = express()
   app.set('port', config.app.port)
@@ -30,13 +26,10 @@ export default async function ExpressInit(): Promise<Application> {
   const { sconfig } = await Get_Session_Details()
 
   app.use(session(sconfig))
-  if (config.NODE_ENV === 'development' || config.NODE_ENV === 'production')
-    app.use(csfrProtection), app.use(generatecsfr)
   app.use(passport.initialize())
   app.use(passport.session())
-  app.use(limiter) // remove in production and use reverse proxy instead like HAproxy. also app limiters inside business logic do not work well in clusters
-  // used to reduce the size of the files
 
+  // used to reduce the size of the files
   app.use(helmet(helmetOptions))
   app.use(cors(corsOptions))
   app.use(logRequest)

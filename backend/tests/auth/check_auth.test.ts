@@ -8,3 +8,10 @@ describe('Simple login test', () => {
     expect(res.body.data.message).toBe('User not loggedIn')
   })
 })
+
+describe('Simple login test', () => {
+  test('should return 400 after login', async () => {
+    const res = await request(app).get('/about_me')
+    expect(res.body.data.loggedIn).toBe(false)
+  })
+})

@@ -21,15 +21,15 @@ services:
       - /backend/node_modules
     command: npm run dev
 
-  nextjs-ui:
+  react-ui:
     build:
       context: ../frontend
       target: development
     environment:
       - NODE_ENV=development
     ports:
-      - '3000:3000'
-    container_name: nextjs-ui
+      - '5173:5173'
+    container_name: react-ui
     stdin_open: true
     volumes:
       - ../frontend:/frontend

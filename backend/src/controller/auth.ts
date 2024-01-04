@@ -38,7 +38,9 @@ AuthController.Login = async (
         if (!user.ip.includes(req.socket.remoteAddress)) {
           try {
             await EmailServ.NewLocation(user.email, user._id)
-            return res.json({ message: 'Verify your email' })
+            return res
+              .status(403)
+              .json({ message: 'New location detected. Verify your email' })
           } catch (err) {
             return next(err)
           }
@@ -50,7 +52,7 @@ AuthController.Login = async (
             resolve()
           })
         })
-
+        logger.debug(req.body.rememberMe)
         req.session.cookie.maxAge =
           sanitize(req.body.rememberMe) === true
             ? 7 * 24 * 60 * 60 * 1000

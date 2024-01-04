@@ -136,7 +136,7 @@ usersController.reset_password = async (
 
     await EmailServ.NewPassword(email, user._id)
 
-    return res.json({ message: 'Verify your email' })
+    return res.json({ message: 'Verify your email', success: true })
   } catch (err) {
     return next(err)
   }
@@ -235,21 +235,17 @@ usersController.about_me = async (req, res, next) => {
         throw new BadCookie('Bad cookie') // if user authenthicated and ip s do not match with the one inside of the coookie delete cookie
       }
       return res.json({
-        data: {
-          loggedIn: true,
-          message: 'User loggedIn',
-          csrf: token,
-          user: req.session.passport.user,
-        },
+        loggedIn: true,
+        message: 'User loggedIn',
+        csrf: token,
+        user: req.session.passport.user,
       })
     }
     if (!req.isAuthenticated())
       return res.json({
-        data: {
-          loggedIn: false,
-          message: 'User not loggedIn',
-          csrf: token,
-        },
+        loggedIn: false,
+        message: 'User not loggedIn',
+        csrf: token,
       })
   } catch (err) {
     return next(err)

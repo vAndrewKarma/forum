@@ -20,6 +20,7 @@ router.post(
 )
 router.post(
   endpoint.user.reset_password.route,
+  checkCsrf,
   endpoint.user.reset_password.controller
 )
 router.post(

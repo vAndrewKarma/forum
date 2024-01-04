@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { useNavigate } from 'react-router-dom'
 import Avatar from '@mui/material/Avatar'
 import Button from '@mui/material/Button'
 import CssBaseline from '@mui/material/CssBaseline'
@@ -13,7 +14,11 @@ import Typography from '@mui/material/Typography'
 import Container from '@mui/material/Container'
 import { TypographyProps } from '@mui/material/Typography'
 import useAxios from 'axios-hooks'
-import useAuth from '../../components/auth/useAuth'
+import useAuth from '../../../components/auth/useAuth'
+import { validateLogin } from '../../../utils/validation'
+import { useState } from 'react'
+import { IconButton, InputAdornment } from '@mui/material'
+import { Visibility, VisibilityOff } from '@mui/icons-material'
 
 function Copyright(props: TypographyProps) {
   return (
@@ -34,9 +39,15 @@ function Copyright(props: TypographyProps) {
 }
 
 export default function SignIn() {
+  const navigate = useNavigate()
   const info = useAuth()
-
-  const [{ data, loading, error }, executePost] = useAxios(
+  console.log(info.data.loggedIn)
+  const [value, setValue] = useState<boolean>(false)
+  const [showPassword, setShowPassword] = useState(false)
+  const handleClickShowPassword = () => setShowPassword(!showPassword)
+  const handleMouseDownPassword = () => setShowPassword(!showPassword)
+  const [errors, setErrors] = useState<null>(null)
+  const [{ loading, error }, executePost] = useAxios(
     {
       url: 'http://localhost:4000/login',
       withCredentials: true,
@@ -47,28 +58,39 @@ export default function SignIn() {
   const updateData = async (information: {
     email: string
     password: string
+    rememberMe: boolean
   }) => {
-    executePost({
+    setErrors(null)
+    const { data } = await executePost({
       data: {
         email: information.email,
         password: information.password,
         csrf: info.data.csrf,
+        rememberMe: information.rememberMe,
       },
     })
     console.log(data)
+    return navigate('/')
   }
-  if (loading) return <>loading</>
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    const form = new FormData(event.currentTarget)
-    const information = {
-      email: form.get('email')?.toString() || '',
-      password: form.get('password')?.toString() || '',
+    try {
+      setErrors(null)
+      const form = new FormData(event.currentTarget)
+      const information = {
+        email: form.get('email')?.toString() || '',
+        password: form.get('password')?.toString() || '',
+        rememberMe: value,
+      }
+      console.log(value)
+      validateLogin(information)
+      await updateData(information)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      setErrors(err.issues[0].message)
     }
-    await updateData(information)
   }
-  if (error)
-    return <>({error.response ? JSON.stringify(error.response.data) : null})</>
   return (
     <>
       <Container component="main" maxWidth="xs">
@@ -103,19 +125,51 @@ export default function SignIn() {
               autoComplete="email"
               autoFocus
             />
-
             <TextField
               margin="normal"
               required
               fullWidth
               name="password"
               label="Password"
-              type="password"
+              type={showPassword ? 'text' : 'password'}
               id="password"
               autoComplete="current-password"
+              InputProps={{
+                // <-- This is where the toggle button is added.
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                    >
+                      {showPassword ? <Visibility /> : <VisibilityOff />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
             />
+            {error && !errors && (
+              <Typography color="error" sx={{ textAlign: 'left' }}>
+                {error.response
+                  ? JSON.parse(JSON.stringify(error.response.data.message))
+                  : null}
+              </Typography>
+            )}
+            {errors && !error && (
+              <Typography color="error" sx={{ textAlign: 'left' }}>
+                {errors ? JSON.parse(JSON.stringify(errors)) : null}
+              </Typography>
+            )}
+
             <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
+              control={
+                <Checkbox
+                  value={value}
+                  onChange={() => setValue(!value)}
+                  color="primary"
+                />
+              }
               label="Remember me"
             />
             <Button
@@ -124,17 +178,16 @@ export default function SignIn() {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign In
+              {loading ? 'Loading...' : 'Sign'}
             </Button>
-
             <Grid container>
               <Grid item xs>
-                <Link href="#" variant="body2">
+                <Link href="/forgot-pass" variant="body2">
                   Forgot password?
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link href="/sign-up" variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>

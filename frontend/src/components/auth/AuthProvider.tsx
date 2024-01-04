@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ReactNode } from 'react'
 import AuthContext from './AuthContext'
 import useAxios from 'axios-hooks'
+import { Typography } from '@mui/material'
 
 const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [{ data, loading, error }] = useAxios({
@@ -8,21 +10,26 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     withCredentials: true,
   })
   console.log(data)
-  if (error) return <p>{JSON.stringify(error)}</p>
 
-  if (loading)
+  if (loading) {
     return (
-      <main className="flex  items-center justify-center min-h-screen">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
-          <div className="py-16">
-            <h1 className="text-3xl font-semibold text-gray-200">
-              Loading the Page !
-            </h1>
-            <p className="mt-2 text-gray-400">Please wait...</p>
-          </div>
-        </div>
+      <main>
+        <Typography component="h1" variant="h1">
+          Loading
+        </Typography>
       </main>
     )
+  }
+  if (error) return
+  ;<main>
+    {error && (
+      <Typography color="error" sx={{ textAlign: 'left' }}>
+        {(error as any)?.response
+          ? JSON.parse(JSON.stringify((error as any).response.data.message))
+          : null}
+      </Typography>
+    )}
+  </main>
 
   return (
     <AuthContext.Provider value={{ data }}>{children}</AuthContext.Provider>

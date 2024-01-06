@@ -20,7 +20,7 @@ describe('Simple login test', () => {
     await request(app).post('/register').send(data)
     const res = await request(app)
       .post('/reset_password')
-      .send({ email: `${user}1@gmail.com` })
+      .send({ email: `${user}1@gmail.com`, csrf: csrf })
     expect(res.body.message).toBe('Verify your email')
   })
 })
@@ -29,7 +29,7 @@ describe('Simple login test', () => {
   test('should return 400 after login', async () => {
     const res = await request(app)
       .post('/reset_password')
-      .send({ email: `${user}@1gmail.com` })
+      .send({ email: `${user}@1gmail.com`, csrf: csrf })
     expect(res.statusCode).toBe(400)
   })
 })
@@ -38,7 +38,7 @@ describe('Simple login test', () => {
   test('should return 400 after login', async () => {
     const res = await request(app)
       .post('/check_link_password_reset')
-      .send({ email: `${user}@1gmail.com` })
+      .send({ email: `${user}@1gmail.com`, csrf: csrf })
     expect(res.statusCode).toBe(411)
   })
 })
@@ -47,7 +47,7 @@ describe('Simple login test', () => {
   test('should return 400 after login', async () => {
     const res = await request(app)
       .post('/new_password')
-      .send({ email: `${user}@1gmail.com` })
+      .send({ email: `${user}@1gmail.com`, csrf: csrf })
     expect(res.statusCode).toBe(411)
   })
 })
@@ -63,7 +63,7 @@ describe('Simple login test', () => {
       gender: 'Female',
       username: user,
       rememberMe: true,
-
+      csrf: csrf,
       uid: '6589798556878599795d91e3',
       token: 'a8adec0c0a1916a7db5e45417766aad0e21dced5',
     }
@@ -83,7 +83,7 @@ describe('Simple login test', () => {
       gender: 'Female',
       username: user,
       rememberMe: true,
-
+      csrf: csrf,
       uid: '6589798556878599795d91e3',
       token: 'a8adec0c0a1916a7db5e45417766aad0e21dced5',
     }

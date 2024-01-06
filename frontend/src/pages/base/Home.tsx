@@ -1,9 +1,10 @@
 import useAxios from 'axios-hooks'
 import Button from '@mui/material/Button'
+
 export default function Home() {
   const [{ data, loading, error }, refetch] = useAxios({
     withCredentials: true,
-    url: 'http://localhost:4000/about_me',
+    url: `http://localhost:4000/about_me`,
   })
 
   if (loading) return <p>Loading...</p>

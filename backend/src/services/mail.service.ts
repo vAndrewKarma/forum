@@ -19,7 +19,7 @@ EmailServ.NewLocation = async (email: string, uid: string) => {
     from: config.app.email_user,
     to: email,
     subject: 'New location',
-    text: `Seems like you moved to a new location. Please click the next link to confirm it: ${config.client}/new-location?=${uid}+${token}`,
+    text: `Seems like you moved to a new location. Please click the next link to confirm it: ${config.client}/new_location/${uid}/${token}`,
   }
 
   await transporter.sendMail(mailOptions, (error, info) => {
@@ -38,7 +38,7 @@ EmailServ.NewPassword = async (email: string, uid: string) => {
     from: config.app.email_user,
     to: email,
     subject: 'New Password',
-    text: `Seems like you request a new password. Please click the next link to confirm it: ${config.client}/new-password?=${uid}+${token}`,
+    text: `Seems like you request a new password. Please click the next link to confirm it: ${config.client}/new_password/${uid}/${token}`,
   }
 
   await transporter.sendMail(mailOptions, (error, info) => {

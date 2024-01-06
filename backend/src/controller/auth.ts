@@ -61,6 +61,7 @@ AuthController.Login = async (
         res.status(200).json({
           data: {
             loggedIn: true,
+            success: true,
             message: 'User logged in',
           },
         })

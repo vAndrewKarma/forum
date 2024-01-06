@@ -22,7 +22,6 @@ import { TypographyProps } from '@mui/material/Typography'
 import { Visibility, VisibilityOff } from '@mui/icons-material'
 import useAxios from 'axios-hooks'
 import useAuth from '../../../components/auth/useAuth'
-import { validateRegister } from '../../../utils/validation'
 import { useNavigate } from 'react-router-dom'
 
 function Copyright(props: TypographyProps) {
@@ -49,10 +48,10 @@ export default function SignUp() {
   const [showPassword, setShowPassword] = React.useState(false)
   const handleClickShowPassword = () => setShowPassword(!showPassword)
   const handleMouseDownPassword = () => setShowPassword(!showPassword)
-  const [errors, setErrors] = React.useState<null>(null)
+
   const [{ loading, error }, executePost] = useAxios(
     {
-      url: 'http://localhost:4000/register',
+      url: `http://localhost:4000/register`,
       withCredentials: true,
       method: 'POST',
     },
@@ -79,7 +78,6 @@ export default function SignUp() {
     firstName: string
     lastName: string
   }) => {
-    setErrors(null)
     await executePost({
       data: {
         email: information.email,
@@ -92,30 +90,24 @@ export default function SignUp() {
         firstName: information.firstName,
       },
     })
-    return navigate('/')
+    return navigate(0)
   }
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    try {
-      setErrors(null)
 
-      const data = new FormData(event.currentTarget)
-      const information = {
-        email: data.get('email')?.toString() || '',
-        password: data.get('password')?.toString() || '',
-        confirm_password: data.get('confirm_password')?.toString() || '',
-        username: data.get('username')?.toString() || '',
-        gender: gender || 'Not Specified', // Use 'Not Specified' as default
-        firstName: data.get('firstName')?.toString() || '',
-        lastName: data.get('lastName')?.toString() || '',
-      }
-
-      validateRegister(information)
-      await updateData(information)
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
-      setErrors(err.issues[0].message)
+    const data = new FormData(event.currentTarget)
+    const information = {
+      email: data.get('email')?.toString() || '',
+      password: data.get('password')?.toString() || '',
+      confirm_password: data.get('confirm_password')?.toString() || '',
+      username: data.get('username')?.toString() || '',
+      gender: gender || 'Not Specified', // Use 'Not Specified' as default
+      firstName: data.get('firstName')?.toString() || '',
+      lastName: data.get('lastName')?.toString() || '',
     }
+
+    await updateData(information)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   }
 
   return (
@@ -241,16 +233,11 @@ export default function SignUp() {
                 </Select>
               </FormControl>
             </Grid>
-            {error && !errors && (
+            {error && (
               <Typography color="error" sx={{ textAlign: 'left' }}>
                 {error.response
                   ? JSON.parse(JSON.stringify(error.response.data.message))
                   : null}
-              </Typography>
-            )}
-            {errors && !error && (
-              <Typography color="error" sx={{ textAlign: 'left' }}>
-                {errors ? JSON.parse(JSON.stringify(errors)) : null}
               </Typography>
             )}
 

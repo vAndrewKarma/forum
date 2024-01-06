@@ -15,7 +15,6 @@ import Container from '@mui/material/Container'
 import { TypographyProps } from '@mui/material/Typography'
 import useAxios from 'axios-hooks'
 import useAuth from '../../../components/auth/useAuth'
-import { validateLogin } from '../../../utils/validation'
 import { useState } from 'react'
 import { IconButton, InputAdornment } from '@mui/material'
 import { Visibility, VisibilityOff } from '@mui/icons-material'
@@ -46,10 +45,9 @@ export default function SignIn() {
   const [showPassword, setShowPassword] = useState(false)
   const handleClickShowPassword = () => setShowPassword(!showPassword)
   const handleMouseDownPassword = () => setShowPassword(!showPassword)
-  const [errors, setErrors] = useState<null>(null)
   const [{ loading, error }, executePost] = useAxios(
     {
-      url: 'http://localhost:4000/login',
+      url: `http://localhost:4000/login`,
       withCredentials: true,
       method: 'POST',
     },
@@ -60,7 +58,6 @@ export default function SignIn() {
     password: string
     rememberMe: boolean
   }) => {
-    setErrors(null)
     const { data } = await executePost({
       data: {
         email: information.email,
@@ -70,26 +67,21 @@ export default function SignIn() {
       },
     })
     console.log(data)
-    return navigate('/')
+    return navigate(0)
   }
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    try {
-      setErrors(null)
-      const form = new FormData(event.currentTarget)
-      const information = {
-        email: form.get('email')?.toString() || '',
-        password: form.get('password')?.toString() || '',
-        rememberMe: value,
-      }
-      console.log(value)
-      validateLogin(information)
-      await updateData(information)
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
-      setErrors(err.issues[0].message)
+
+    const form = new FormData(event.currentTarget)
+    const information = {
+      email: form.get('email')?.toString() || '',
+      password: form.get('password')?.toString() || '',
+      rememberMe: value,
     }
+    console.log(value)
+    await updateData(information)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   }
   return (
     <>
@@ -149,19 +141,13 @@ export default function SignIn() {
                 ),
               }}
             />
-            {error && !errors && (
+            {error && (
               <Typography color="error" sx={{ textAlign: 'left' }}>
                 {error.response
                   ? JSON.parse(JSON.stringify(error.response.data.message))
                   : null}
               </Typography>
             )}
-            {errors && !error && (
-              <Typography color="error" sx={{ textAlign: 'left' }}>
-                {errors ? JSON.parse(JSON.stringify(errors)) : null}
-              </Typography>
-            )}
-
             <FormControlLabel
               control={
                 <Checkbox

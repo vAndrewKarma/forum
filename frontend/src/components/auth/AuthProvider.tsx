@@ -6,7 +6,7 @@ import { Typography } from '@mui/material'
 
 const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [{ data, loading, error }] = useAxios({
-    url: 'http://localhost:4000/about_me',
+    url: `http://localhost:4000/about_me`,
     withCredentials: true,
   })
   console.log(data)

@@ -12,7 +12,6 @@ import Container from '@mui/material/Container'
 import { TypographyProps } from '@mui/material/Typography'
 import useAxios from 'axios-hooks'
 import useAuth from '../../../components/auth/useAuth'
-import { validateResetPassword } from '../../../utils/validation'
 import { useState } from 'react'
 
 function Copyright(props: TypographyProps) {
@@ -36,17 +35,15 @@ function Copyright(props: TypographyProps) {
 export default function ForgotPass() {
   const info = useAuth()
   const [succes, setSucces] = useState<string>('')
-  const [errors, setErrors] = useState<null>(null)
   const [{ loading, error }, executePost] = useAxios(
     {
-      url: 'http://localhost:4000/reset_password',
+      url: `http://localhost:4000/reset_password`,
       withCredentials: true,
       method: 'POST',
     },
     { manual: true }
   )
   const updateData = async (information: { email: string }) => {
-    setErrors(null)
     const { data } = await executePost({
       data: {
         email: information.email,
@@ -59,23 +56,18 @@ export default function ForgotPass() {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    try {
-      setErrors(null)
-      const form = new FormData(event.currentTarget)
-      const information = {
-        email: form.get('email')?.toString() || '',
-      }
-      validateResetPassword(information)
 
-      await updateData(information)
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (err: any) {
-      setErrors(err.issues[0].message)
+    const form = new FormData(event.currentTarget)
+    const information = {
+      email: form.get('email')?.toString() || '',
     }
+
+    await updateData(information)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   }
   return (
     <>
-      <Container component="main" maxWidth="xs">
+      <Container component="main" maxWidth="sm">
         <CssBaseline />
         <Box
           sx={{
@@ -108,20 +100,15 @@ export default function ForgotPass() {
               autoFocus
             />
 
-            {error && !errors && (
+            {error && (
               <Typography color="error" sx={{ textAlign: 'left' }}>
                 {error.response
                   ? JSON.parse(JSON.stringify(error.response.data.message))
                   : null}
               </Typography>
             )}
-            {errors && !error && (
-              <Typography color="error" sx={{ textAlign: 'left' }}>
-                {errors ? JSON.parse(JSON.stringify(errors)) : null}
-              </Typography>
-            )}
 
-            {succes && !errors && !error && (
+            {succes && !error && (
               <Typography color="success" sx={{ textAlign: 'left' }}>
                 {succes ? succes : null}
               </Typography>

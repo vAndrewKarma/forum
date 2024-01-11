@@ -91,11 +91,8 @@ usersController.newz_Location = async (
 ) => {
   try {
     const data = JSON.parse(JSON.stringify(validateTokenUid(req.body)))
-
     const token = sanitize(data.token)
-
     const uid = sanitize(data.uid)
-
     const rez = JSON.parse(await redServ.redfindBy(`new_location: ${token}`))
 
     if (rez == null || rez !== uid) throw new CredentialsError('Invalid link')
@@ -103,7 +100,6 @@ usersController.newz_Location = async (
     await redServ.redDel(`new_location: ${token}`)
 
     const user = await UserMethods.findUserBy('_id', uid)
-
     if (!user) throw new CredentialsError('Invalid link')
 
     if (!user.ip.includes(req.socket.remoteAddress)) {
@@ -111,10 +107,10 @@ usersController.newz_Location = async (
 
       await UserMethods.saveUser(user)
 
-      return res.json({ succes: true, message: 'Location updated' })
+      return res.json({ success: true, message: 'Location updated' })
     }
 
-    return res.json({ succes: true, message: 'Location already updated' })
+    return res.json({ success: true, message: 'Location already updated' })
   } catch (err) {
     return next(err)
   }
@@ -127,9 +123,7 @@ usersController.reset_password = async (
 ) => {
   try {
     const data = JSON.parse(JSON.stringify(validateResetPassword(req.body)))
-
     const email = sanitize(data.email)
-
     const user = await UserMethods.findUserBy('email', email)
 
     if (!user) throw new CredentialsError('Email not found')
@@ -159,17 +153,13 @@ usersController.check_link_password_reset = async (
     }
 
     const data = JSON.parse(JSON.stringify(validateTokenUid(req.body)))
-
     const token = sanitize(data.token)
-
     const uid = sanitize(data.uid)
-
     const rez = JSON.parse(await redServ.redfindBy(`reset_password: ${token}`))
 
     if (rez == null || rez !== uid) throw new CredentialsError('Invalid link')
 
     const user = await UserMethods.findUserBy('_id', uid)
-
     if (!user) throw new CredentialsError('Invalid link')
 
     return res.json({ message: 'Good link' })
@@ -205,7 +195,6 @@ usersController.new_password = async (
     if (rez === null || rez !== uid) throw new CredentialsError('Invalid link')
 
     const user = await UserMethods.findUserBy('_id', uid)
-
     if (!user) throw new CredentialsError('Invalid link')
 
     const match = await User.comparePassword(password, user.password)
@@ -229,6 +218,7 @@ usersController.new_password = async (
 usersController.about_me = async (req, res, next) => {
   try {
     const token = await generateCsrf(req, res, next)
+
     if (req.isAuthenticated()) {
       if (!req.session.passport.user.ip.includes(req.socket.remoteAddress)) {
         logger.debug('ip s do not match')

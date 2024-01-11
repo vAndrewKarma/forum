@@ -15,6 +15,9 @@ export const AuthController: TAuthController = {
   Logout: undefined,
 }
 
+const ONE_WEEK = 7 * 24 * 60 * 60 * 1000
+const THREE_HOURS = 3 * 60 * 60 * 1000
+
 AuthController.Login = async (
   req: Request,
   res: Response,
@@ -30,10 +33,10 @@ AuthController.Login = async (
         info: { message: string }
       ) {
         if (err) {
-          return next(err)
+          throw err
+        } else if (!user) {
+          throw new CredentialsError(info.message)
         }
-
-        if (!user) throw new CredentialsError(info.message)
 
         if (!user.ip.includes(req.socket.remoteAddress)) {
           try {
@@ -53,10 +56,9 @@ AuthController.Login = async (
           })
         })
         logger.debug(req.body.rememberMe)
-        req.session.cookie.maxAge =
-          sanitize(req.body.rememberMe) === true
-            ? 7 * 24 * 60 * 60 * 1000
-            : 3 * 60 * 60 * 1000
+        req.session.cookie.maxAge = sanitize(req.body.rememberMe)
+          ? ONE_WEEK
+          : THREE_HOURS
 
         res.status(200).json({
           data: {

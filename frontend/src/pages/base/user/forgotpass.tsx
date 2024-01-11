@@ -1,4 +1,3 @@
-import * as React from 'react'
 import Avatar from '@mui/material/Avatar'
 import Button from '@mui/material/Button'
 import CssBaseline from '@mui/material/CssBaseline'
@@ -34,7 +33,7 @@ function Copyright(props: TypographyProps) {
 
 export default function ForgotPass() {
   const info = useAuth()
-  const [succes, setSucces] = useState<string>('')
+  const [success, setSuccess] = useState<string>('')
   const [{ loading, error }, executePost] = useAxios(
     {
       url: `http://localhost:4000/reset_password`,
@@ -51,7 +50,7 @@ export default function ForgotPass() {
       },
     })
     console.log(data)
-    if (data.success) setSucces('Verify your email address')
+    if (data.success) setSuccess('Verify your email address')
   }
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -102,15 +101,14 @@ export default function ForgotPass() {
 
             {error && (
               <Typography color="error" sx={{ textAlign: 'left' }}>
-                {error.response
-                  ? JSON.parse(JSON.stringify(error.response.data.message))
-                  : null}
+                {error.response &&
+                  JSON.parse(JSON.stringify(error.response.data.message))}
               </Typography>
             )}
 
-            {succes && !error && (
+            {success && !error && (
               <Typography color="success" sx={{ textAlign: 'left' }}>
-                {succes ? succes : null}
+                {success}
               </Typography>
             )}
 

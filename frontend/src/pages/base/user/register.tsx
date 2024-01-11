@@ -24,6 +24,8 @@ import useAxios from 'axios-hooks'
 import useAuth from '../../../components/auth/useAuth'
 import { useNavigate } from 'react-router-dom'
 
+type Gender = 'Not Specified' | 'Male' | 'Female'
+
 function Copyright(props: TypographyProps) {
   return (
     <Typography
@@ -57,15 +59,12 @@ export default function SignUp() {
     },
     { manual: true }
   )
-  const [gender, setGender] = React.useState<
-    'Not Specified' | 'Male' | 'Female' | undefined
-  >('Not Specified')
+  const [gender, setGender] = React.useState<Gender | undefined>(
+    'Not Specified'
+  )
 
-  const handleChange = (
-    event: SelectChangeEvent<'Not Specified' | 'Male' | 'Female'>
-  ) => {
-    const selectedGender: 'Not Specified' | 'Male' | 'Female' = event.target
-      .value as 'Not Specified' | 'Male' | 'Female'
+  const handleChange = (event: SelectChangeEvent<Gender>) => {
+    const selectedGender: Gender = event.target.value as Gender
 
     setGender(selectedGender)
   }
@@ -235,9 +234,8 @@ export default function SignUp() {
             </Grid>
             {error && (
               <Typography color="error" sx={{ textAlign: 'left' }}>
-                {error.response
-                  ? JSON.parse(JSON.stringify(error.response.data.message))
-                  : null}
+                {error.response &&
+                  JSON.parse(JSON.stringify(error.response.data.message))}
               </Typography>
             )}
 

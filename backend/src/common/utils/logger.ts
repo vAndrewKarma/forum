@@ -43,5 +43,5 @@ export const logger = winston.createLogger({
       ({ level, message }) => `[ ${date} - ${time}] --- ${level}: ${message}`
     )
   ),
-  transports: transports,
+  transports,
 })

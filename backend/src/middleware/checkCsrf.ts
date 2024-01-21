@@ -3,16 +3,12 @@ import { redServ } from '../services/redis.service'
 import sanitize from '../common/utils/mongo-sanitize'
 import Csrf from '../common/errors/custom/CsrfError'
 import { logger } from '../common/utils/logger'
-import config from '../config'
 
 export async function checkCsrf(
   req: Request,
   res: Response,
   next: NextFunction
 ) {
-  if (config.NODE_ENV !== 'development' && config.NODE_ENV !== 'production')
-    return next()
-
   try {
     const token = sanitize(req.body.csrf)
     logger.debug(`TOKEN --- ${token}`)

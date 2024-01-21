@@ -7,7 +7,7 @@ let csrf
 describe('Simple register test', () => {
   test('should return 200', async () => {
     const token = await request(app).get('/about_me')
-    csrf = token.body.data.csrf
+    csrf = token.body.csrf
     const data = {
       email: `${user}@gmail.com`,
       password: 'ssszzsA37a!',
@@ -23,9 +23,9 @@ describe('Simple register test', () => {
     cookie = res.headers['set-cookie']
 
     const secondRequestRes = await request(app)
-      .post('/check-auth')
+      .get('/about_me')
       .set('Cookie', cookie)
-    expect(secondRequestRes.body.data.loggedIn).toBe(true)
+    expect(secondRequestRes.body.message).toBe('User loggedIn')
   })
 })
 

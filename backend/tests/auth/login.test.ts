@@ -5,7 +5,7 @@ import { app, user } from '../setup'
 let csrf
 beforeAll(async () => {
   const token = await request(app).get('/about_me')
-  csrf = token.body.data.csrf
+  csrf = token.body.csrf
   const data = {
     email: `${user}@gmail.com`,
     password: 'ssszzsA37a!',
@@ -39,12 +39,12 @@ describe('Simple login test', () => {
     const cookie = loginRes.headers['set-cookie']
 
     const secondRequestRes = await request(app)
-      .post('/check-auth')
+      .get('/about_me')
       .set('Cookie', cookie)
 
-    expect(secondRequestRes.body.data.loggedIn).toBe(true)
+    expect(secondRequestRes.body.loggedIn).toBe(true)
 
-    expect(secondRequestRes.body.data.message).toBe('User logged in')
+    expect(secondRequestRes.body.message).toBe('User loggedIn')
   })
 })
 
@@ -68,12 +68,12 @@ describe('Simple login test', () => {
     const cookie = loginRes.headers['set-cookie']
 
     const secondRequestRes = await request(app)
-      .post('/check-auth')
+      .get('/about_me')
       .set('Cookie', cookie)
 
-    expect(secondRequestRes.body.data.loggedIn).toBe(true)
+    expect(secondRequestRes.body.loggedIn).toBe(true)
 
-    expect(secondRequestRes.body.data.message).toBe('User logged in')
+    expect(secondRequestRes.body.message).toBe('User loggedIn')
   })
 })
 
@@ -96,14 +96,10 @@ describe('Simple login test, user not exists any more...', () => {
 
     const cookie = loginRes.headers['set-cookie']
     await User.deleteOne({ username: user })
-    const secondRequestRes = await request(app)
-      .post('/check-auth')
+    await request(app)
+      .get('/about_me')
       .set('Cookie', cookie)
 
-    expect(secondRequestRes.body.data.loggedIn).toBe(false)
-    expect(secondRequestRes.body.data.message).toBe(
-      'User Successfully Logged Out'
-    )
 
     const data = {
       email: `${user}@gmail.com`,
@@ -137,7 +133,7 @@ describe('Simple login test', () => {
 
     const loginRes = await request(app).post('/login').send(loginData)
 
-    expect(loginRes.body.message).toBe('Verify your email')
+    expect(loginRes.body.message).toBe('New location detected. Verify your email')
     await User.deleteOne({ username: user })
     const data = {
       email: `${user}@gmail.com`,

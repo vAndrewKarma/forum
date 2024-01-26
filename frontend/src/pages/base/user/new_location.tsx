@@ -16,8 +16,8 @@ export default function New_Location() {
     withCredentials: true,
     method: 'POST',
     data: {
-      token: token,
-      uid: uid,
+      token,
+      uid,
     },
   })
 
@@ -42,16 +42,16 @@ export default function New_Location() {
 
           {error && (
             <Typography color="error" sx={{ textAlign: 'left' }}>
-              {error.response ? 'Invalid link' : null}
+              {error.response && 'Invalid link'}
             </Typography>
           )}
           {data && (
             <Typography sx={{ textAlign: 'left' }}>
-              {data.succes ? 'Location updated' : null}
+              {data.success && 'Location updated'}
             </Typography>
           )}
 
-          {loading ? 'Loading...' : null}
+          {loading && 'Loading...'}
         </Box>
       </Container>
     </>

@@ -10,17 +10,20 @@ export const tokenServ: TtokenServ = {
   genTokenForResetPassword: undefined,
 }
 
-tokenServ.genTokenForNewLocation = async (uid: string) => {
-  const string = randomBytes(20).toString('hex')
+const RANDOM_BYTE_SIZE = 20
+const ONE_DAY = 86400
 
-  await redServ.redSetEx(`new_location: ${string}`, 86400, uid.toString())
+tokenServ.genTokenForNewLocation = async (uid: string) => {
+  const string = randomBytes(RANDOM_BYTE_SIZE).toString('hex')
+
+  await redServ.redSetEx(`new_location: ${string}`, ONE_DAY, uid.toString())
 
   return string
 }
 
 tokenServ.genTokenForResetPassword = async (uid: string) => {
-  const string = randomBytes(20).toString('hex')
+  const string = randomBytes(RANDOM_BYTE_SIZE).toString('hex')
 
-  await redServ.redSetEx(`reset_password: ${string}`, 86400, uid.toString())
+  await redServ.redSetEx(`reset_password: ${string}`, ONE_DAY, uid.toString())
   return string
 }

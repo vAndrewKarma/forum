@@ -4,21 +4,25 @@ import { Navigate } from 'react-router-dom'
 
 interface ProtectedProps {
   children: ReactNode
-  AuthRoute?: boolean
+  redirectIfAuthenticated?: boolean
   needsAuth?: boolean
 }
 
-const Protected = ({ children, AuthRoute, needsAuth }: ProtectedProps) => {
+const Protected = ({
+  children,
+  redirectIfAuthenticated,
+  needsAuth,
+}: ProtectedProps) => {
   const { data } = useAuth()
 
   console.log(`
   ---------------------------  inside protected
   ${JSON.stringify(data)}
   ----------------------------`)
-  const isAuthenticated = data.loggedIn === true
+  const isAuthenticated = data.loggedIn
   console.log(isAuthenticated)
 
-  if (AuthRoute && isAuthenticated) return <Navigate to="/" />
+  if (redirectIfAuthenticated && isAuthenticated) return <Navigate to="/" />
   if (needsAuth && !isAuthenticated) return <Navigate to="/sign-in" />
 
   return <>{children}</>

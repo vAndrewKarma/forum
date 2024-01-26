@@ -40,11 +40,11 @@ export default function Sign_out() {
 
           {error && (
             <Typography color="error" sx={{ textAlign: 'left' }}>
-              {error.response ? 'Error' : null}
+              {error.response && 'Error'}
             </Typography>
           )}
 
-          {loading ? 'Loading...' : null}
+          {loading && 'Loading...'}
         </Box>
       </Container>
     </>

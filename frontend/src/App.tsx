@@ -15,7 +15,7 @@ function App() {
   return (
     <>
       <Router>
-        <ResponsiveAppBar />{' '}
+        <ResponsiveAppBar />
         <Routes>
           <Route
             path="/"
@@ -28,7 +28,7 @@ function App() {
           <Route
             path="/me"
             element={
-              <Protected needsAuth={true}>
+              <Protected needsAuth>
                 <Me />
               </Protected>
             }
@@ -36,7 +36,7 @@ function App() {
           <Route
             path="/sign-out"
             element={
-              <Protected needsAuth={true}>
+              <Protected needsAuth>
                 <Sign_out />
               </Protected>
             }
@@ -44,7 +44,7 @@ function App() {
           <Route
             path="/sign-up"
             element={
-              <Protected AuthRoute={true}>
+              <Protected redirectIfAuthenticated>
                 <SignUp />
               </Protected>
             }
@@ -52,7 +52,7 @@ function App() {
           <Route
             path="/sign-in"
             element={
-              <Protected AuthRoute={true}>
+              <Protected redirectIfAuthenticated>
                 <SignIn />
               </Protected>
             }
@@ -60,7 +60,7 @@ function App() {
           <Route
             path="/forgot-pass"
             element={
-              <Protected AuthRoute={true}>
+              <Protected redirectIfAuthenticated>
                 <ForgotPass />
               </Protected>
             }
@@ -68,7 +68,7 @@ function App() {
           <Route
             path="/new_location/:uid/:token"
             element={
-              <Protected AuthRoute={true}>
+              <Protected redirectIfAuthenticated>
                 <New_Location />
               </Protected>
             }

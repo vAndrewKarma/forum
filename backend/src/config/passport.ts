@@ -22,36 +22,33 @@ passport.use(
     password,
     done
   ) {
-    let user: UserDocument
     logger.debug(email)
+
+    const invalidCrednetials = () =>
+      done(new CredentialsError('Invalid credentials'), false)
+
     try {
       const data = JSON.parse(
-        JSON.stringify(validateLogin({ email: email, password: password }))
+        JSON.stringify(validateLogin({ email, password }))
       )
       const uname = sanitize(data.email)
-      user = await UserMethods.findUserBy('email', uname)
+      const user = await UserMethods.findUserBy('email', uname)
       if (!user) {
-        return done(new CredentialsError('Invalid credentials'), false)
+        return invalidCrednetials()
       }
-    } catch (e) {
-      return done(e)
-    }
-    try {
-      const data = JSON.parse(
-        JSON.stringify(validateLogin({ email: email, password: password }))
-      )
+
       const match = await User.comparePassword(
         sanitize(data.password),
         user.password
       )
       if (!match) {
-        return done(new CredentialsError('Invalid credentials'), false)
+        return invalidCrednetials()
       }
+
+      return done(undefined, user)
     } catch (e) {
       return done(e)
     }
-
-    return done(undefined, user)
   })
 )
 

@@ -70,7 +70,7 @@ export default function SignIn() {
     return navigate(0)
   }
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
 
     const form = new FormData(event.currentTarget)
@@ -80,7 +80,7 @@ export default function SignIn() {
       rememberMe: value,
     }
     console.log(value)
-    await updateData(information)
+    updateData(information)
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   }
   return (
@@ -143,9 +143,8 @@ export default function SignIn() {
             />
             {error && (
               <Typography color="error" sx={{ textAlign: 'left' }}>
-                {error.response
-                  ? JSON.parse(JSON.stringify(error.response.data.message))
-                  : null}
+                {error.response &&
+                  JSON.parse(JSON.stringify(error.response.data.message))}
               </Typography>
             )}
             <FormControlLabel

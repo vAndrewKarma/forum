@@ -20,16 +20,15 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
       </main>
     )
   }
-  if (error) return
-  ;<main>
-    {error && (
-      <Typography color="error" sx={{ textAlign: 'left' }}>
-        {(error as any)?.response
-          ? JSON.parse(JSON.stringify((error as any).response.data.message))
-          : null}
-      </Typography>
-    )}
-  </main>
+  if (error)
+    return (
+      <main>
+        <Typography color="error" sx={{ textAlign: 'left' }}>
+          {error.response &&
+            JSON.parse(JSON.stringify(error.response.data.message))}
+        </Typography>
+      </main>
+    )
 
   return (
     <AuthContext.Provider value={{ data }}>{children}</AuthContext.Provider>

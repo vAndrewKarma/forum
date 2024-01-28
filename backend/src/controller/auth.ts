@@ -32,41 +32,45 @@ AuthController.Login = async (
         user: UserDocument,
         info: { message: string }
       ) {
-        if (err) {
-          throw err
-        } else if (!user) {
-          throw new CredentialsError(info.message)
-        }
-
-        if (!user.ip.includes(req.socket.remoteAddress)) {
-          try {
-            await EmailServ.NewLocation(user.email, user._id)
-            return res
-              .status(403)
-              .json({ message: 'New location detected. Verify your email' })
-          } catch (err) {
-            return next(err)
+        try {
+          if (err) {
+            throw err
+          } else if (!user) {
+            throw new CredentialsError(info.message)
           }
-        }
 
-        await new Promise<void>((resolve, reject) => {
-          req.logIn(user, (err) => {
-            if (err) reject(err)
-            resolve()
+          if (!user.ip.includes(req.socket.remoteAddress)) {
+            try {
+              await EmailServ.NewLocation(user.email, user._id)
+              return res
+                .status(403)
+                .json({ message: 'New location detected. Verify your email' })
+            } catch (err) {
+              return next(err)
+            }
+          }
+
+          await new Promise<void>((resolve, reject) => {
+            req.logIn(user, (err) => {
+              if (err) reject(err)
+              resolve()
+            })
           })
-        })
-        logger.debug(req.body.rememberMe)
-        req.session.cookie.maxAge = sanitize(req.body.rememberMe)
-          ? ONE_WEEK
-          : THREE_HOURS
+          logger.debug(req.body.rememberMe)
+          req.session.cookie.maxAge = sanitize(req.body.rememberMe)
+            ? ONE_WEEK
+            : THREE_HOURS
 
-        res.status(200).json({
-          data: {
-            loggedIn: true,
-            success: true,
-            message: 'User logged in',
-          },
-        })
+          res.status(200).json({
+            data: {
+              loggedIn: true,
+              success: true,
+              message: 'User logged in',
+            },
+          })
+        } catch (err) {
+          return next(err)
+        }
       }
     )(req, res, next)
   } catch (err) {

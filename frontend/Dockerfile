@@ -1,5 +1,4 @@
-FROM node:18.19.0-alpine AS development
-ENV MEMORY=4G
+FROM node:21-alpine3.18 AS development
 
 WORKDIR /frontend
 
@@ -8,5 +7,3 @@ COPY ./package*.json ./
 RUN npm install
 
 COPY ./ .
-
-CMD ["npm","run", "dev"]

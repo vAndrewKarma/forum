@@ -1,4 +1,4 @@
-FROM node:18 AS development
+FROM node:21-alpine3.18 AS development
 
 WORKDIR /backend
 

@@ -34,6 +34,7 @@ services:
     volumes:
       - ../frontend:/frontend
       - /frontend/node_modules
+
     command: npm run dev
 
   mongo:

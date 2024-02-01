@@ -62,7 +62,7 @@
     "helmet": "^7.0.0",
     "http": "0.0.1-security",
     "mongoose": "^8.0.4",
-    "nodemailer": "^6.9.7",
+    "nodemailer": "^6.9.9",
     "passport": "^0.7.0",
     "passport-local": "^1.0.0",
     "redis": "^4.6.11",

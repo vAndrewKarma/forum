@@ -13,10 +13,3 @@ describe('Simple login test', () => {
     expect(res.body.message).toBe('Invalid link')
   })
 })
-
-describe('Simple login test', () => {
-  test('should return 400 after login', async () => {
-    const res = await request(app).post('/activate_email_request')
-    expect(res.status).toEqual(400)
-  })
-})

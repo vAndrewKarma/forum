@@ -29,6 +29,7 @@ router.post(
 )
 router.post(
   endpoint.user.new_password.route,
+  checkCsrf,
   endpoint.user.new_password.controller
 )
 router.post(

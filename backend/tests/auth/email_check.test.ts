@@ -17,6 +17,6 @@ describe('Simple login test', () => {
 describe('Simple login test', () => {
   test('should return 400 after login', async () => {
     const res = await request(app).post('/activate_email_request')
-    expect(res.body.message).toBe('User not loggedIn')
+    expect(res.status).toEqual(400)
   })
 })

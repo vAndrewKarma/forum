@@ -4,10 +4,12 @@ import { redServ } from './redis.service'
 type TtokenServ = {
   genTokenForNewLocation: (uid: string) => Promise<string>
   genTokenForResetPassword: (uid: string) => Promise<string>
+  genTokenForVerifyEmail: (uid: string) => Promise<string>
 }
 export const tokenServ: TtokenServ = {
   genTokenForNewLocation: undefined,
   genTokenForResetPassword: undefined,
+  genTokenForVerifyEmail: undefined,
 }
 
 const RANDOM_BYTE_SIZE = 20
@@ -25,5 +27,12 @@ tokenServ.genTokenForResetPassword = async (uid: string) => {
   const string = randomBytes(RANDOM_BYTE_SIZE).toString('hex')
 
   await redServ.redSetEx(`reset_password: ${string}`, ONE_DAY, uid.toString())
+  return string
+}
+
+tokenServ.genTokenForVerifyEmail = async (uid: string) => {
+  const string = randomBytes(RANDOM_BYTE_SIZE).toString('hex')
+
+  await redServ.redSetEx(`email_verify: ${string}`, ONE_DAY, uid.toString())
   return string
 }

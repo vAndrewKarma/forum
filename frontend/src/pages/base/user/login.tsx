@@ -45,6 +45,7 @@ export default function SignIn() {
   const [showPassword, setShowPassword] = useState(false)
   const handleClickShowPassword = () => setShowPassword(!showPassword)
   const handleMouseDownPassword = () => setShowPassword(!showPassword)
+
   const [{ loading, error }, executePost] = useAxios(
     {
       url: `http://localhost:4000/login`,
@@ -81,7 +82,6 @@ export default function SignIn() {
     }
     console.log(value)
     updateData(information)
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   }
   return (
     <>
@@ -143,8 +143,11 @@ export default function SignIn() {
             />
             {error && (
               <Typography color="error" sx={{ textAlign: 'left' }}>
-                {error.response &&
-                  JSON.parse(JSON.stringify(error.response.data.message))}
+                {error.response && (
+                  <p>
+                    {JSON.parse(JSON.stringify(error.response.data.message))}
+                  </p>
+                )}
               </Typography>
             )}
             <FormControlLabel
@@ -167,7 +170,7 @@ export default function SignIn() {
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link href="/forgot-pass" variant="body2">
+                <Link href="/forgot-password" variant="body2">
                   Forgot password?
                 </Link>
               </Grid>

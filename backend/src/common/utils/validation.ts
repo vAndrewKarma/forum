@@ -42,7 +42,7 @@ export const ResetPassword = z.object({
   email: z.string().email('Invalid credentials').max(40, 'Invalid credentials'),
 })
 
-const NEW_location = z.object({
+const link = z.object({
   uid: z
     .string()
     .min(10, 'Invalid link')
@@ -94,8 +94,8 @@ export const validateResetPassword = (user: z.infer<typeof ResetPassword>) =>
 export const validateLogin = (user: z.infer<typeof LoginUser>) =>
   LoginUser.parse(user)
 
-export const validateTokenUid = (new_loc: z.infer<typeof NEW_location>) =>
-  NEW_location.parse(new_loc)
+export const validateTokenUid = (new_loc: z.infer<typeof link>) =>
+  link.parse(new_loc)
 
 export const validateNewPasswordReset = (
   pswd_body: z.infer<typeof new_password>

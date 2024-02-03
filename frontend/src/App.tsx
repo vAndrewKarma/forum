@@ -10,6 +10,8 @@ import New_Location from './pages/base/user/new_location'
 import ResponsiveAppBar from './components/navigate/navigate'
 import NotFoundPage from './pages/errors/notFound'
 import Sign_out from './pages/base/user/sign-out'
+import Reset_Password from './pages/base/user/resetpass'
+import Verify_Email from './pages/base/user/verify_email'
 
 function App() {
   return (
@@ -58,7 +60,7 @@ function App() {
             }
           />
           <Route
-            path="/forgot-pass"
+            path="/forgot-password"
             element={
               <Protected redirectIfAuthenticated>
                 <ForgotPass />
@@ -66,10 +68,26 @@ function App() {
             }
           />
           <Route
-            path="/new_location/:uid/:token"
+            path="/new-location/:uid/:token"
             element={
               <Protected redirectIfAuthenticated>
                 <New_Location />
+              </Protected>
+            }
+          />
+          <Route
+            path="/new-password/:uid/:token"
+            element={
+              <Protected redirectIfAuthenticated>
+                <Reset_Password />
+              </Protected>
+            }
+          />
+          <Route
+            path="/verify-email/:uid/:token"
+            element={
+              <Protected>
+                <Verify_Email />
               </Protected>
             }
           />

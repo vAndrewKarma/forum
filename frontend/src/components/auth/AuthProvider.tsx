@@ -24,8 +24,15 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     return (
       <main>
         <Typography color="error" sx={{ textAlign: 'left' }}>
-          {error.response &&
-            JSON.parse(JSON.stringify(error.response.data.message))}
+          {error.response && (
+            <div>
+              <h1>Error</h1>
+              <p>
+                {' '}
+                {JSON.parse(JSON.stringify(error.response.data.message))}
+              </p>{' '}
+            </div>
+          )}
         </Typography>
       </main>
     )

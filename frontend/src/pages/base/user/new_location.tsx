@@ -20,7 +20,19 @@ export default function New_Location() {
       uid,
     },
   })
-
+  if (error) {
+    return (
+      <Typography color="error">
+        {error.response && (
+          <>
+            <h1>Error</h1>
+            <h4>Invalid link</h4>
+            <p> If the issue persists please contact the site owner</p>
+          </>
+        )}
+      </Typography>
+    )
+  }
   return (
     <>
       <Container component="main" maxWidth="sm">
@@ -40,11 +52,6 @@ export default function New_Location() {
             New location
           </Typography>
 
-          {error && (
-            <Typography color="error" sx={{ textAlign: 'left' }}>
-              {error.response && 'Invalid link'}
-            </Typography>
-          )}
           {data && (
             <Typography sx={{ textAlign: 'left' }}>
               {data.success && 'Location updated'}

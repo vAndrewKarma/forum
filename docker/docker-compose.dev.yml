@@ -20,7 +20,6 @@ services:
       - ../backend:/backend
       - /backend/node_modules
     command: npm run dev
-
   react-ui:
     build:
       context: ../frontend
@@ -36,7 +35,6 @@ services:
       - /frontend/node_modules
 
     command: npm run dev
-
   mongo:
     image: mongo:latest
     environment:

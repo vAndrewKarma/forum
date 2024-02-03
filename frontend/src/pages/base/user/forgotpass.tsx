@@ -62,7 +62,6 @@ export default function ForgotPass() {
     }
 
     await updateData(information)
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   }
   return (
     <>
@@ -101,8 +100,11 @@ export default function ForgotPass() {
 
             {error && (
               <Typography color="error" sx={{ textAlign: 'left' }}>
-                {error.response &&
-                  JSON.parse(JSON.stringify(error.response.data.message))}
+                {error.response && (
+                  <p>
+                    {JSON.parse(JSON.stringify(error.response.data.message))}
+                  </p>
+                )}
               </Typography>
             )}
 

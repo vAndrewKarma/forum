@@ -9,6 +9,7 @@ interface UserAttributes {
   firstName?: string
   ip: string[]
   lastName?: string
+  verified: boolean
 }
 
 export interface UserDocument extends UserAttributes, Document {}
@@ -33,6 +34,10 @@ const UserSchema = new mongoose.Schema<UserDocument>(
       trim: true,
       unique: true,
       index: true,
+    },
+    verified: {
+      type: Boolean,
+      default: false,
     },
     ip: {
       type: [String],

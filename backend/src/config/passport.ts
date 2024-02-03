@@ -12,6 +12,7 @@ interface Isession {
   username: string
   gender: string
   ip: string
+  verified: boolean
 }
 
 passport.use(
@@ -58,6 +59,7 @@ passport.serializeUser((user: UserDocument, done) => {
     username: user.username,
     gender: user.gender,
     ip: user.ip,
+    verified: user.verified,
     email: user.email,
     lastName: user.lastName,
     firstName: user.firstName,

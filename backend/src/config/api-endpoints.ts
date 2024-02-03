@@ -30,6 +30,14 @@ const endpoint: ApiEndpoints = {
       route: '/register',
       controller: usersController.Signup,
     },
+    check_email: {
+      route: '/activate_email',
+      controller: usersController.activate_email,
+    },
+    activate_email_request: {
+      route: '/activate_email_request',
+      controller: usersController.request_email_verification_code,
+    },
     new_location: {
       route: '/new_location',
       controller: usersController.newz_Location,

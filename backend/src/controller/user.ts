@@ -28,6 +28,12 @@ type TuserController = {
     next: NextFunction
   ) => void
   new_password: (req: Request, res: Response, next: NextFunction) => void
+  activate_email: (req: Request, res: Response, next: NextFunction) => void
+  request_email_verification_code: (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => void
 }
 export const usersController: TuserController = {
   Signup: undefined,
@@ -36,6 +42,8 @@ export const usersController: TuserController = {
   reset_password: undefined,
   check_link_password_reset: undefined,
   new_password: undefined,
+  activate_email: undefined,
+  request_email_verification_code: undefined,
 }
 
 usersController.Signup = async (
@@ -73,6 +81,7 @@ usersController.Signup = async (
       })
     }
     logger.debug(user)
+    EmailServ.VerifyEmail(sanitized.email, user._id)
     return res.json({
       data: {
         loggedIn: true,
@@ -128,7 +137,7 @@ usersController.reset_password = async (
 
     if (!user) throw new CredentialsError('Email not found')
 
-    await EmailServ.NewPassword(email, user._id)
+    EmailServ.NewPassword(email, user._id)
 
     return res.json({ message: 'Verify your email', success: true })
   } catch (err) {
@@ -237,6 +246,49 @@ usersController.about_me = async (req, res, next) => {
         message: 'User not loggedIn',
         csrf: token,
       })
+  } catch (err) {
+    return next(err)
+  }
+}
+
+usersController.activate_email = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const data = JSON.parse(JSON.stringify(validateTokenUid(req.body)))
+
+    const token = sanitize(data.token)
+    const uid = sanitize(data.uid)
+
+    const rez = JSON.parse(await redServ.redfindBy(`email_verify: ${token}`))
+
+    if (rez === null || rez !== uid) throw new CredentialsError('Invalid link')
+
+    const user = await UserMethods.findUserBy('_id', uid)
+    if (!user) throw new CredentialsError('Invalid link')
+
+    await redServ.redDel(`email_verify: ${token}`)
+
+    user.verified = true
+    await UserMethods.saveUser(user)
+
+    return res.json({ message: 'worked', succes: true })
+  } catch (err) {
+    return next(err)
+  }
+}
+
+usersController.request_email_verification_code = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const sanitized = sanitize(req.session.passport.user)
+    EmailServ.VerifyEmail(sanitized.email, sanitized.id)
+    return res.json({ message: 'worked', succes: true })
   } catch (err) {
     return next(err)
   }

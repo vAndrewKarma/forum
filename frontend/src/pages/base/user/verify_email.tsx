@@ -6,22 +6,33 @@ import Typography from '@mui/material/Typography'
 import Container from '@mui/material/Container'
 import useAxios from 'axios-hooks'
 
-import { useNavigate } from 'react-router-dom'
-import { useEffect } from 'react'
+import { useParams } from 'react-router-dom'
 
-export default function Sign_out() {
-  const navigate = useNavigate()
-
+export default function Verify_Email() {
+  const { uid, token } = useParams()
+  console.log(uid, token)
   const [{ data, loading, error }] = useAxios({
-    url: `http://localhost:4000/logout`,
+    url: `http://localhost:4000/activate_email`,
     withCredentials: true,
     method: 'POST',
+    data: {
+      token,
+      uid,
+    },
   })
-  useEffect(() => {
-    if (data.loggedIn === false) return navigate(0)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data.loggedIn])
-
+  if (error) {
+    return (
+      <Typography color="error">
+        {error.response && (
+          <>
+            <h1>Error</h1>
+            <h4>Invalid link</h4>
+            <p> If the issue persists please contact the site owner</p>
+          </>
+        )}
+      </Typography>
+    )
+  }
   return (
     <>
       <Container component="main" maxWidth="sm">
@@ -37,18 +48,13 @@ export default function Sign_out() {
           <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
             <LockOutlinedIcon />
           </Avatar>
+          <Typography component="h1" variant="h5">
+            Email Verified
+          </Typography>
 
-          {error && (
-            <Typography color="error">
-              {error.response && (
-                <div>
-                  <h1>Error</h1>
-                  <p>
-                    {' '}
-                    {JSON.parse(JSON.stringify(error.response.data.message))}
-                  </p>{' '}
-                </div>
-              )}
+          {data && (
+            <Typography sx={{ textAlign: 'left' }}>
+              {data.success && 'Location updated'}
             </Typography>
           )}
 

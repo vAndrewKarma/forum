@@ -41,7 +41,7 @@ AuthController.Login = async (
 
           if (!user.ip.includes(req.socket.remoteAddress)) {
             try {
-              await EmailServ.NewLocation(user.email, user._id)
+              EmailServ.NewLocation(user.email, user._id)
               return res
                 .status(403)
                 .json({ message: 'New location detected. Verify your email' })

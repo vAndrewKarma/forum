@@ -257,6 +257,7 @@ usersController.activate_email = async (
   next: NextFunction
 ) => {
   try {
+    logger.debug(req.session.id)
     const data = JSON.parse(JSON.stringify(validateTokenUid(req.body)))
 
     const token = sanitize(data.token)
@@ -270,10 +271,16 @@ usersController.activate_email = async (
     if (!user) throw new CredentialsError('Invalid link')
 
     await redServ.redDel(`email_verify: ${token}`)
-
     user.verified = true
     await UserMethods.saveUser(user)
-
+    if (user._id) {
+      await new Promise<void>((resolve, reject) => {
+        req.logIn(user, (err) => {
+          if (err) reject(err)
+          resolve()
+        })
+      })
+    }
     return res.json({ message: 'worked', succes: true })
   } catch (err) {
     return next(err)
@@ -287,6 +294,7 @@ usersController.request_email_verification_code = async (
 ) => {
   try {
     const sanitized = sanitize(req.session.passport.user)
+
     EmailServ.VerifyEmail(sanitized.email, sanitized.id)
     return res.json({ message: 'worked', succes: true })
   } catch (err) {

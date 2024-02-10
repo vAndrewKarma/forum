@@ -11,7 +11,7 @@ COPY ./ .
 ENV PORT=4000
 ENV NODE_ENV=development
 ENV CLIENT=http://localhost:4000
-
+RUN npm run ready
 EXPOSE ${PORT}
 
-CMD ["npm", "run", "dev"]
+CMD ["npm", "run", "start"]

@@ -2,7 +2,6 @@ TODO:
 
 - ADD DOCUMENTATION.
 
-Find a way to develop based on https
 think about production and scaling it...
 improve the security of the backend
 Add re captcha / some type of verification code

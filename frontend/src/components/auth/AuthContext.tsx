@@ -3,9 +3,16 @@ import { createContext } from 'react'
 interface Information {
   loggedIn: boolean
   csrf: string
-  user?: object
+  user?: user
 }
-
+interface user {
+  username: string
+  firstName: string
+  verified: boolean
+  lastName: string
+  email: string
+  ip: any
+}
 interface AuthContextI {
   data: Information
 }

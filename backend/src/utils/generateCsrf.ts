@@ -9,6 +9,6 @@ export async function generateCsrf(
 ) {
   const token = sanitize(randomBytes(20).toString('hex'))
   const info = req.socket.remoteAddress
-  await redServ.redSetEx(`${sanitize(token.toString())}`, 3600, info)
+  await redServ.redSetEx(`csrf: ${sanitize(token.toString())}`, 3600, info)
   return token
 }

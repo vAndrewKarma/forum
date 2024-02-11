@@ -16,17 +16,14 @@ export async function checkCsrf(
       throw new Csrf('Unauthorized')
     }
 
-    // Log the token for debugging
     console.log('Token:', token)
 
-    // Fetch data from Redis
-    const redisResult = await redServ.redfindBy(token)
+    const redisResult = await redServ.redfindBy(`csrf: ${token}`)
 
     if (redisResult === null) {
-      throw new Csrf('Unauthorized') // or handle the null case accordingly
+      throw new Csrf('Unauthorized')
     }
 
-    // Parse the Redis result
     const info = `${req.socket.remoteAddress}`
     const rez = JSON.parse(redisResult)
 

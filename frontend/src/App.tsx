@@ -12,6 +12,7 @@ import NotFoundPage from './pages/errors/notFound'
 import Sign_out from './pages/base/user/sign-out'
 import Reset_Password from './pages/base/user/resetpass'
 import Verify_Email from './pages/base/user/verify_email'
+import ContactPage from './pages/base/Contact'
 
 function App() {
   return (
@@ -91,6 +92,14 @@ function App() {
               </Protected>
             }
           />
+          <Route
+            path="contact-me"
+            element={
+              <Protected>
+                <ContactPage />
+              </Protected>
+            }
+          ></Route>
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Router>

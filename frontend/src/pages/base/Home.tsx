@@ -1,35 +1,45 @@
+import React from 'react'
 import useAxios from 'axios-hooks'
 import Button from '@mui/material/Button'
+import useAuth from '../../components/auth/useAuth'
 import { Typography } from '@mui/material'
 
 export default function Home() {
-  const [{ data, loading, error }, refetch] = useAxios({
-    withCredentials: true,
-    url: `http://localhost:4000/about_me`,
-  })
+  const { data } = useAuth()
+  const [activateEmailRequest, executePost] = useAxios(
+    {
+      url: `http://localhost:4000/activate_email_request`,
+      withCredentials: true,
+      method: 'POST',
+    },
+    { manual: true }
+  )
+  const handleSubmit = async () => {
+    await executePost()
+  }
 
-  if (loading) return <p>Loading...</p>
-  if (error)
-    return (
-      <Typography color="error" sx={{ textAlign: 'left' }}>
-        {error.response && (
-          <div>
-            <h1>Error</h1>
-            <p>
-              {' '}
-              {JSON.parse(JSON.stringify(error.response.data.message))}
-            </p>{' '}
-          </div>
-        )}
-      </Typography>
-    )
+  let buttonText = 'Click here to request an email verification'
+  if (activateEmailRequest.loading) {
+    buttonText = 'Loading...'
+  } else if (activateEmailRequest.data && activateEmailRequest.data.succes) {
+    buttonText = 'Verification email sent'
+  }
 
   return (
     <div>
-      <Button onClick={() => refetch()} variant="contained">
-        refetch
-      </Button>
-      <pre>{JSON.stringify(data, null, 2)}</pre>;
+      {data.loggedIn ? (
+        <div>
+          <h1>
+            Welcome back, {data.user?.firstName} {data.user?.lastName}!
+          </h1>
+          {!data.user?.verified && !activateEmailRequest.data?.succes && (
+            <Button onClick={handleSubmit}>{buttonText}</Button>
+          )}
+          {!data.user?.verified && activateEmailRequest.data?.succes && (
+            <Typography>{buttonText}</Typography>
+          )}
+        </div>
+      ) : null}
     </div>
   )
 }

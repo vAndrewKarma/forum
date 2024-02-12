@@ -10,7 +10,7 @@ export default {
     service: process.env.MAIL_SERVICE || '',
     mail_port: process.env.MAIL_PORT || 587,
   },
-  db: process.env.MONGO_URI || 'mongodb://localhost:27017/forum',
+  db: process.env.MONGODB_URI || 'mongodb://localhost:27017/forum',
   client: process.env.CLIENT || 'http://localhost:5173',
   cache: process.env.REDIS_URL || 'redis://127.0.0.1:6379',
   tests: {

@@ -11,7 +11,7 @@ services:
     environment:
       - NODE_ENV=development
       - REDIS_URL=redis://redis:6379
-      - MONGO_URI=mongodb://root:example@mongo:27017/forum?authSource=admin
+      - MONGODB_URI=mongodb://root:example@mongo:27017/forum?authSource=admin
     depends_on:
       - mongo
       - redis
@@ -21,20 +21,21 @@ services:
       - /backend/node_modules
     command: npm run dev
 
-  react-ui:
-    build:
-      context: ../frontend
-      target: development
-    environment:
-      - NODE_ENV=development
-    ports:
-      - '5173:5173'
-    container_name: react-ui
-    stdin_open: true
-    volumes:
-      - ../frontend:/frontend
-      - /frontend/node_modules
-    command: npm run dev
+  #if you have a machine which runs low on ram memory you shouldn t compose the frontend too
+  # react-ui:
+  #   build:
+  #     context: ../frontend
+  #     target: development
+  #   environment:
+  #     - NODE_ENV=development
+  #   ports:
+  #     - '5173:5173'
+  #   container_name: react-ui
+  #   stdin_open: true
+  #   volumes:
+  #     - ../frontend:/frontend
+  #     - /frontend/node_modules
+  #   command: npm run dev
 
   mongo:
     image: mongo:latest

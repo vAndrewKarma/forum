@@ -42,6 +42,10 @@ export const ResetPassword = z.object({
   email: z.string().email('Invalid credentials').max(40, 'Invalid credentials'),
 })
 
+const validatePagination = z.object({
+  page: z.number().min(1, 'Minimum page 1'),
+})
+
 const link = z.object({
   uid: z
     .string()
@@ -83,9 +87,16 @@ const new_password = z
   .refine((data) => data.password === data.confirm_password, {
     message: 'Passwords do not match',
   })
-
+const getbyString = z.object({
+  name: z
+    .string()
+    .max(40, 'User does not exist')
+    .regex(/^[a-zA-Z ]+$/, 'User does not exist'),
+})
 export type UserType = z.infer<typeof RegisterUser>
 
+export const validateGetBystring = (user: z.infer<typeof getbyString>) =>
+  getbyString.parse(user)
 export const validateRegister = (user: UserType) => RegisterUser.parse(user)
 
 export const validateResetPassword = (user: z.infer<typeof ResetPassword>) =>
@@ -96,7 +107,8 @@ export const validateLogin = (user: z.infer<typeof LoginUser>) =>
 
 export const validateTokenUid = (new_loc: z.infer<typeof link>) =>
   link.parse(new_loc)
-
+export const validPage = (page: z.infer<typeof validatePagination>) =>
+  validatePagination.parse(page)
 export const validateNewPasswordReset = (
   pswd_body: z.infer<typeof new_password>
 ) => new_password.parse(pswd_body)

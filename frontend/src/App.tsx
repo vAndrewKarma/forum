@@ -13,7 +13,7 @@ import Sign_out from './pages/base/user/sign-out'
 import Reset_Password from './pages/base/user/resetpass'
 import Verify_Email from './pages/base/user/verify_email'
 import ContactPage from './pages/base/Contact'
-
+import UsersPage from './pages/base/Users'
 function App() {
   return (
     <>
@@ -25,6 +25,14 @@ function App() {
             element={
               <Protected>
                 <Home />
+              </Protected>
+            }
+          />
+          <Route
+            path="/users"
+            element={
+              <Protected>
+                <UsersPage />
               </Protected>
             }
           />

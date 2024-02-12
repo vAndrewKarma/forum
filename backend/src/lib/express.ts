@@ -13,6 +13,7 @@ import { UserRoutes } from '../routes/user'
 import { StatusRoute } from '../routes/status'
 import { AuthRoutes } from '../routes/auth'
 import Notfound from '../common/errors/custom/notfound'
+import { InformationRoute } from '../routes/information'
 export default async function ExpressInit(): Promise<Application> {
   const app: Application = express()
   app.set('port', config.app.port)
@@ -37,6 +38,7 @@ export default async function ExpressInit(): Promise<Application> {
 
   //ROUTES
   app.use(StatusRoute)
+  app.use(InformationRoute)
   app.use(UserRoutes)
   app.use(AuthRoutes)
   app.all('*', (_req: Request, _res: Response, _next: NextFunction) => {

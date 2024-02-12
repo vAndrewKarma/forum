@@ -2,7 +2,8 @@ import { Request, Response, NextFunction } from 'express'
 import { statusController } from '../controller/status'
 import { usersController } from '../controller/user'
 import { AuthController } from '../controller/auth'
-type EndpointTypes = 'auth' | 'user' | 'status'
+import { InformationController } from '../controller/information'
+type EndpointTypes = 'auth' | 'user' | 'status' | 'information'
 
 type ApiEndpoint = {
   [key: string]: {
@@ -74,6 +75,16 @@ const endpoint: ApiEndpoints = {
         res
           .status(201)
           .json({ data: { loggedIn: true, message: 'User logged in' } }),
+    },
+  },
+  information: {
+    userInfo: {
+      route: '/get-users',
+      controller: InformationController.GetUsers,
+    },
+    getSingleUser: {
+      route: '/get-user',
+      controller: InformationController.GetSingleUser,
     },
   },
 }

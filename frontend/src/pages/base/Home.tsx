@@ -29,9 +29,7 @@ export default function Home() {
     <div>
       {data.loggedIn ? (
         <div>
-          <h1>
-            Welcome back, {data.user?.firstName} {data.user?.lastName}!
-          </h1>
+          <h1>Welcome back, {data.user?.username} !</h1>
           {!data.user?.verified && !activateEmailRequest.data?.succes && (
             <Button onClick={handleSubmit}>{buttonText}</Button>
           )}

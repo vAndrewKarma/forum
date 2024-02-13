@@ -1,4 +1,3 @@
-import { FilterQuery } from 'mongoose'
 import { logger } from '../common/utils/logger'
 import { User, UserDocument } from '../models/user'
 
@@ -23,7 +22,10 @@ type TUserMeth = {
   }) => UserDocument
   saveUser: (user: UserDocument) => Promise<void>
   getAll: (page: number, findExpresion: string) => Promise<UserDocument[]>
-  findAllUsersBy: (findexpression: string) => Promise<UserDocument[]>
+  findAllUsersBy: (
+    findexpression: string,
+    field: string
+  ) => Promise<UserDocument[]>
 }
 
 export const UserMethods: TUserMeth = {
@@ -35,7 +37,7 @@ export const UserMethods: TUserMeth = {
 }
 
 UserMethods.getAll = async (page: number, findExpresion: string) => {
-  const limit = 20
+  const limit = 45
   const startIndex = (page - 1) * limit
   try {
     const users = await User.find({}, findExpresion)
@@ -51,41 +53,16 @@ UserMethods.getAll = async (page: number, findExpresion: string) => {
 UserMethods.findUserBy = async (prop: string, value: string) =>
   await User.findOne({ [prop]: value })
 
-UserMethods.findAllUsersBy = async (findexpression: string) => {
-  // Split the search query into first name and last name
-  const [firstName, lastName] = findexpression.split(' ')
+UserMethods.findAllUsersBy = async (findexpression: string, field: string) => {
+  try {
+    const regex = new RegExp(findexpression, 'i') //regex for fuzzy search
 
-  // Construct a regular expression that matches both orders of first name and last name
-  const regex = new RegExp(
-    `(${firstName}.*${lastName})|(${lastName}.*${firstName})`,
-    'i'
-  )
-
-  // Construct the filter query object
-  const filterQuery: FilterQuery<UserDocument> = {
-    $or: [
-      // Match first name followed by last name or vice versa
-      {
-        $or: [
-          {
-            $and: [
-              { firstName: { $regex: new RegExp(firstName, 'i') } },
-              { lastName: { $regex: new RegExp(lastName, 'i') } },
-            ],
-          },
-          {
-            $and: [
-              { lastName: { $regex: new RegExp(lastName, 'i') } },
-              { firstName: { $regex: new RegExp(firstName, 'i') } },
-            ],
-          },
-        ],
-      },
-    ],
+    const users = await User.find({ [field]: { $regex: regex } }).exec()
+    return users
+  } catch (err) {
+    console.error('Error finding users:', err)
+    return []
   }
-
-  // Find users matching the filter query
-  return await User.find(filterQuery)
 }
 
 UserMethods.createUser = ({

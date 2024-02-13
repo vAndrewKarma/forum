@@ -90,8 +90,8 @@ const new_password = z
 const getbyString = z.object({
   name: z
     .string()
-    .max(40, 'User does not exist')
-    .regex(/^[a-zA-Z ]+$/, 'User does not exist'),
+    .max(20, 'User does not exist')
+    .regex(/^[a-zA-Z0-9]+$/, 'User does not exist'),
 })
 export type UserType = z.infer<typeof RegisterUser>
 

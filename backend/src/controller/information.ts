@@ -1,7 +1,6 @@
 import { Response, Request, NextFunction } from 'express'
 import { validPage, validateGetBystring } from '../common/utils/validation'
 import sanitize from '../common/utils/mongo-sanitize'
-import { logger } from '../common/utils/logger'
 import { UserMethods } from '../services/user.service'
 type TInfoController = {
   GetUsers: (req: Request, res: Response, next: NextFunction) => void
@@ -21,10 +20,10 @@ InformationController.GetUsers = async (
   try {
     const { page } = sanitize(JSON.parse(JSON.stringify(validPage(req.body))))
 
-    const users = await UserMethods.getAll(page, `firstName lastName gender`)
+    const users = await UserMethods.getAll(page, `username gender`)
     if (users.length < 1) return res.send({ message: '404' })
     const parsed = users.map((user) => {
-      return `${user.firstName} ${user.lastName} ${user.gender}`
+      return `${user.username} ${user.gender}`
     })
     return res.json({
       users: parsed,
@@ -43,10 +42,10 @@ InformationController.GetSingleUser = async (
     const { name } = sanitize(
       JSON.parse(JSON.stringify(validateGetBystring(req.body)))
     )
-    const users = await UserMethods.findAllUsersBy(name)
+    const users = await UserMethods.findAllUsersBy(name, 'username')
     if (users.length < 1) return res.send({ message: '404' })
     const parsed = users.map((user) => {
-      return `${user.firstName} ${user.lastName} ${user.gender}`
+      return `${user.username} ${user.gender}`
     })
     return res.json({
       users: parsed,

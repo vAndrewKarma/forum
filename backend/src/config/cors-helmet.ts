@@ -40,6 +40,7 @@ export const corsOptions = {
   origin: [
     `https://${config.client}`,
     `http://${config.client}`,
+    'http://localhost:5173/',
     config.client.toString(),
   ],
   methods: ['GET', 'POST', 'PUT', 'OPTIONS', 'DELETE'],

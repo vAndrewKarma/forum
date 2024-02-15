@@ -271,6 +271,7 @@ usersController.activate_email = async (
     if (!user) throw new CredentialsError('Invalid link')
 
     await redServ.redDel(`email_verify: ${token}`)
+    if (user.verified) throw new CredentialsError('email already verified')
     user.verified = true
     await UserMethods.saveUser(user)
     if (user._id) {

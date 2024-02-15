@@ -9,6 +9,7 @@ interface user {
   username: string
   firstName: string
   verified: boolean
+  gender: string
   lastName: string
   email: string
   ip: any

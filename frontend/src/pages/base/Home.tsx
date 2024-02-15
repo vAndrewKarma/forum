@@ -2,7 +2,7 @@ import React from 'react'
 import useAxios from 'axios-hooks'
 import Button from '@mui/material/Button'
 import useAuth from '../../components/auth/useAuth'
-import { Typography } from '@mui/material'
+import { Link, Typography } from '@mui/material'
 
 export default function Home() {
   const { data } = useAuth()
@@ -37,7 +37,15 @@ export default function Home() {
             <Typography>{buttonText}</Typography>
           )}
         </div>
-      ) : null}
+      ) : (
+        <div>
+          <h1>Welcome !</h1>
+
+          <Link href="http://localhost:5173/sign-up">
+            If you do not have an account, click here to register one
+          </Link>
+        </div>
+      )}
     </div>
   )
 }

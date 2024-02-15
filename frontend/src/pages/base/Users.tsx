@@ -117,6 +117,7 @@ const UserTable: React.FC = () => {
   const handleSearch = () => {
     setUsers([])
     if (searchTerm.trim() === '') {
+      setScrollLock(false)
       refetch({
         data: { page: 1 },
       })

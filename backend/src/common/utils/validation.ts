@@ -93,6 +93,20 @@ const getbyString = z.object({
     .max(20, 'User does not exist')
     .regex(/^[a-zA-Z0-9]+$/, 'User does not exist'),
 })
+
+const notes = z.object({
+  title: z
+    .string()
+    .min(2, 'Note title should have minimum 2 characters')
+    .max(40, 'Note title can have maximum 40 characters'),
+  content: z
+    .string()
+    .min(10, 'Note title should have minimum 10 characters')
+    .max(450, 'Note title can have maximum 450 characters'),
+  privates: z.boolean(),
+})
+
+export type NotesType = z.infer<typeof notes>
 export type UserType = z.infer<typeof RegisterUser>
 
 export const validateGetBystring = (user: z.infer<typeof getbyString>) =>
@@ -112,3 +126,5 @@ export const validPage = (page: z.infer<typeof validatePagination>) =>
 export const validateNewPasswordReset = (
   pswd_body: z.infer<typeof new_password>
 ) => new_password.parse(pswd_body)
+
+export const validateNotes = (note: z.infer<typeof notes>) => notes.parse(note)

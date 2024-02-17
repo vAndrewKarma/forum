@@ -20,9 +20,24 @@ import BadCookie from '../common/errors/custom/BadCookie'
 type TuserController = {
   Signup: (req: Request, res: Response, next: NextFunction) => void
   newz_Location: (req: Request, res: Response, next: NextFunction) => void
+  reset_password_on_account: (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => void
+  new_password_profile: (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => void
   reset_password: (req: Request, res: Response, next: NextFunction) => void
   about_me: (req: Request, res: Response, next: NextFunction) => void
   check_link_password_reset: (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => void
+  check_link_password_reset_profile: (
     req: Request,
     res: Response,
     next: NextFunction
@@ -43,7 +58,10 @@ export const usersController: TuserController = {
   check_link_password_reset: undefined,
   new_password: undefined,
   activate_email: undefined,
+  check_link_password_reset_profile: undefined,
   request_email_verification_code: undefined,
+  reset_password_on_account: undefined,
+  new_password_profile: undefined,
 }
 
 usersController.Signup = async (
@@ -140,6 +158,98 @@ usersController.reset_password = async (
     EmailServ.NewPassword(email, user._id)
 
     return res.json({ message: 'Verify your email', success: true })
+  } catch (err) {
+    return next(err)
+  }
+}
+
+usersController.reset_password_on_account = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const sanitized = sanitize(req.session.passport.user)
+    const email = sanitized.email
+    const user = await UserMethods.findUserBy('email', email)
+    if (!user) throw new CredentialsError('User does not exists anymore')
+    EmailServ.NewPasswordForget(email, sanitized.id)
+    return res.json({ message: 'Verify your email', success: true })
+  } catch (err) {
+    return next(err)
+  }
+}
+
+usersController.check_link_password_reset_profile = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const data = JSON.parse(JSON.stringify(validateTokenUid(req.body)))
+    const token = sanitize(data.token)
+    const uid = sanitize(data.uid)
+    const rez = JSON.parse(
+      await redServ.redfindBy(`reset_password_profile: ${token}`)
+    )
+
+    if (rez.verified === true) throw new CredentialsError('Link already used')
+    if (rez == null || rez !== uid) throw new CredentialsError('Invalid link')
+
+    const user = await UserMethods.findUserBy('_id', uid)
+    if (!user) throw new CredentialsError('Invalid link')
+
+    return res.json({ message: 'Good link' })
+  } catch (err) {
+    return next(err)
+  }
+}
+
+usersController.new_password_profile = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    req.logout(() => {
+      logger.debug('Logged out')
+    })
+    if (req.session.user) {
+      res.clearCookie('user_sid')
+      req.session.destroy(function (err) {
+        if (err) logger.error(err)
+      })
+    }
+
+    const data = JSON.parse(JSON.stringify(validateNewPasswordReset(req.body)))
+
+    const token = sanitize(data.token)
+    const password = sanitize(data.password)
+    const uid = sanitize(data.uid)
+
+    const rez = JSON.parse(
+      await redServ.redfindBy(`reset_password_profile: ${token}`)
+    )
+
+    if (rez === null || rez !== uid) throw new CredentialsError('Invalid link')
+
+    const user = await UserMethods.findUserBy('_id', uid)
+    if (!user) throw new CredentialsError('Invalid link')
+
+    const match = await User.comparePassword(password, user.password)
+    if (match)
+      throw new CredentialsError(
+        'The new password cannot be the same as the current one'
+      )
+
+    await redServ.redSetEx(`reset_password_profile: ${token}`, 3600, {
+      verified: true,
+    })
+
+    user.password = password
+    await UserMethods.saveUser(user)
+
+    return res.json({ message: 'worked', succes: true })
   } catch (err) {
     return next(err)
   }
@@ -295,7 +405,7 @@ usersController.request_email_verification_code = async (
 ) => {
   try {
     const sanitized = sanitize(req.session.passport.user)
-
+    if (sanitized.verified) throw new CredentialsError('email already verified')
     EmailServ.VerifyEmail(sanitized.email, sanitized.id)
     return res.json({ message: 'worked', succes: true })
   } catch (err) {

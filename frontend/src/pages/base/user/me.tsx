@@ -13,10 +13,17 @@ import useAuth from '../../../components/auth/useAuth'
 
 export default function Me() {
   const { data } = useAuth()
-  const [oldPassword, setOldPassword] = useState('')
-  const [newPassword, setNewPassword] = useState('')
-  const [confirmNewPassword, setConfirmNewPassword] = useState('')
-  const [passwordChangeSuccess, setPasswordChangeSuccess] = useState(false)
+  const [changePasswordRequest, executePasswordRequest] = useAxios(
+    {
+      url: 'http://localhost:4000/reset_password_profile',
+      withCredentials: true,
+      method: 'POST',
+      data: {
+        csrf: data.csrf,
+      },
+    },
+    { manual: true }
+  )
 
   const [activateEmailRequest, executePost] = useAxios(
     {
@@ -28,29 +35,17 @@ export default function Me() {
   )
 
   const handlePasswordChange = async () => {
-    // Check if new passwords match
-    if (newPassword !== confirmNewPassword) {
-      alert('New passwords do not match')
-      return
-    }
-
-    // Send request to change password
     try {
-      // Send request to change password using oldPassword, newPassword
-      // Example:
-      // await axios.post('/change_password', {
-      //   oldPassword: oldPassword,
-      //   newPassword: newPassword
-      // });
-
-      // Assuming the password change was successful
-      setPasswordChangeSuccess(true)
+      await executePasswordRequest({
+        data: {
+          csrf: data.csrf,
+        },
+      })
     } catch (error) {
-      console.error('Error changing password:', error)
-      alert('Failed to change password. Please try again later.')
+      console.error('Error requesting email verification:', error)
+      alert('Failed to request email verification. Please try again later.')
     }
   }
-
   const handleEmailVerificationRequest = async () => {
     try {
       await executePost()
@@ -70,7 +65,7 @@ export default function Me() {
         <Paper elevation={3} sx={{ padding: 3 }}>
           {!data.user?.verified ? (
             <div>
-              <Typography variant="h5">Request New Password</Typography>
+              <Typography variant="h5">Request Email verification</Typography>
               {!activateEmailRequest.data?.succes && (
                 <Button
                   variant="contained"
@@ -97,31 +92,27 @@ export default function Me() {
       </Box>
       <Box mt={3}>
         <Paper elevation={3} sx={{ padding: 3 }}>
-          {!data.user?.verified ? (
-            <div>
-              <Typography variant="h5">Request Email Verification</Typography>
-              {!activateEmailRequest.data?.succes && (
-                <Button
-                  variant="contained"
-                  onClick={handleEmailVerificationRequest}
-                  sx={{ mt: 2 }}
-                >
-                  Request Verification Email
-                </Button>
-              )}
+          <div>
+            <Typography variant="h5">Request New Password</Typography>
+            {!changePasswordRequest.data?.success && (
+              <Button
+                variant="contained"
+                onClick={handlePasswordChange}
+                sx={{ mt: 2 }}
+              >
+                Request Password Change
+              </Button>
+            )}
 
-              {activateEmailRequest.loading && (
-                <Typography mt={2}>Loading...</Typography>
-              )}
-              {activateEmailRequest.data?.succes && (
-                <Typography mt={2} color="success">
-                  Verification email sent successfully!
-                </Typography>
-              )}
-            </div>
-          ) : (
-            <Typography variant="h5">Email verified</Typography>
-          )}
+            {changePasswordRequest.loading && (
+              <Typography mt={2}>Loading...</Typography>
+            )}
+            {changePasswordRequest.data?.success && (
+              <Typography mt={2} color="success">
+                Check your email
+              </Typography>
+            )}
+          </div>
         </Paper>
       </Box>
       <Box mt={3}>

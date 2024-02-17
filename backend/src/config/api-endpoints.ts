@@ -3,7 +3,8 @@ import { statusController } from '../controller/status'
 import { usersController } from '../controller/user'
 import { AuthController } from '../controller/auth'
 import { InformationController } from '../controller/information'
-type EndpointTypes = 'auth' | 'user' | 'status' | 'information'
+import NotesController from '../controller/notes'
+type EndpointTypes = 'auth' | 'user' | 'status' | 'information' | 'notes'
 
 type ApiEndpoint = {
   [key: string]: {
@@ -42,6 +43,18 @@ const endpoint: ApiEndpoints = {
     new_location: {
       route: '/new_location',
       controller: usersController.newz_Location,
+    },
+    reset_password_profile: {
+      route: '/reset_password_profile',
+      controller: usersController.reset_password_on_account,
+    },
+    check_link_password_reset_profile: {
+      route: '/check_link_password_reset_profile',
+      controller: usersController.check_link_password_reset_profile,
+    },
+    new_password_profile: {
+      route: '/new_password_profile',
+      controller: usersController.new_password_profile,
     },
     reset_password: {
       route: '/reset_password',
@@ -85,6 +98,12 @@ const endpoint: ApiEndpoints = {
     getSingleUser: {
       route: '/get-user',
       controller: InformationController.GetSingleUser,
+    },
+  },
+  notes: {
+    createNotez: {
+      route: '/create-note',
+      controller: NotesController.CreateNotes,
     },
   },
 }

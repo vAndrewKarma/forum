@@ -14,6 +14,7 @@ import Reset_Password from './pages/base/user/resetpass'
 import Verify_Email from './pages/base/user/verify_email'
 import ContactPage from './pages/base/Contact'
 import UsersPage from './pages/base/Users'
+import Reset_Password_Profile from './pages/base/user/resetpass_profile'
 function App() {
   return (
     <>
@@ -89,6 +90,14 @@ function App() {
             element={
               <Protected redirectIfAuthenticated>
                 <Reset_Password />
+              </Protected>
+            }
+          />
+          <Route
+            path="/new-password-profile/:uid/:token"
+            element={
+              <Protected>
+                <Reset_Password_Profile />
               </Protected>
             }
           />

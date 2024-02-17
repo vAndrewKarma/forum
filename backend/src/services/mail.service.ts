@@ -6,11 +6,13 @@ import { tokenServ } from './tokens.service'
 type TEmailServ = {
   NewLocation: (email: string, uid: string) => Promise<void>
   NewPassword: (email: string, uid: string) => Promise<void>
+  NewPasswordForget: (email: string, uid: string) => Promise<void>
   VerifyEmail: (email: string, uid: string) => Promise<void>
 }
 export const EmailServ: TEmailServ = {
   NewLocation: undefined,
   NewPassword: undefined,
+  NewPasswordForget: undefined,
   VerifyEmail: undefined,
 }
 
@@ -52,6 +54,24 @@ EmailServ.NewPassword = async (email: string, uid: string) => {
   })
 }
 
+EmailServ.NewPasswordForget = async (email: string, uid: string) => {
+  const token = await tokenServ.genTokenforResetPasswordOnProfile(uid)
+
+  const mailOptions = {
+    from: config.app.email_user,
+    to: email,
+    subject: 'New Password',
+    text: `Seems like you request a new password. Please click the next link to confirm it: ${config.client}/new-password-profile/${uid}/${token}`,
+  }
+
+  await transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      logger.error(error)
+    } else {
+      logger.debug('Email sent:', info.response)
+    }
+  })
+}
 EmailServ.VerifyEmail = async (email: string, uid: string) => {
   const token = await tokenServ.genTokenForVerifyEmail(uid)
 

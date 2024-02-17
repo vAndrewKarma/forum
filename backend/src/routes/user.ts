@@ -24,9 +24,26 @@ router.post(
   endpoint.user.reset_password.controller
 )
 router.post(
+  endpoint.user.reset_password_profile.route,
+  checkCsrf,
+  protected_route({ authenthication_route: false }),
+  endpoint.user.reset_password_profile.controller
+)
+router.post(
   endpoint.user.check_link_password_reset.route,
   endpoint.user.check_link_password_reset.controller
 )
+router.post(
+  endpoint.user.check_link_password_reset_profile.route,
+  endpoint.user.check_link_password_reset_profile.controller
+)
+
+router.post(
+  endpoint.user.new_password_profile.route,
+  checkCsrf,
+  endpoint.user.new_password_profile.controller
+)
+
 router.post(
   endpoint.user.new_password.route,
   checkCsrf,
@@ -39,6 +56,7 @@ router.post(
   }),
   endpoint.user.activate_email_request.controller
 )
+
 router.post(
   endpoint.user.check_email.route,
   endpoint.user.check_email.controller

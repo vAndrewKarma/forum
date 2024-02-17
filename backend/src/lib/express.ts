@@ -14,6 +14,7 @@ import { StatusRoute } from '../routes/status'
 import { AuthRoutes } from '../routes/auth'
 import Notfound from '../common/errors/custom/notfound'
 import { InformationRoute } from '../routes/information'
+import { NotesRoute } from '../routes/notes'
 export default async function ExpressInit(): Promise<Application> {
   const app: Application = express()
   app.set('port', config.app.port)
@@ -37,10 +38,8 @@ export default async function ExpressInit(): Promise<Application> {
   // i will try using _variable-name  for unused variables
 
   //ROUTES
-  app.use(StatusRoute)
-  app.use(InformationRoute)
-  app.use(UserRoutes)
-  app.use(AuthRoutes)
+  app.use(StatusRoute, InformationRoute, UserRoutes, AuthRoutes, NotesRoute)
+
   app.all('*', (_req: Request, _res: Response, _next: NextFunction) => {
     throw new Notfound(`Route couldn't be found`)
   })
